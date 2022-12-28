@@ -1,0 +1,1259 @@
+openapi: 3.0.3
+info:
+  title: Animati - OpenAPI 3.0
+  description: |-
+    ciao
+
+  contact:
+    email: assistenza@animati.app
+  license:
+    name: GPL-3.0 license
+    url: https://github.com/IS-T51/animati/blob/main/LICENSE
+  version: 0.0.1
+
+servers:
+  - url: https://api.animati.app/v1
+  
+tags:
+  - name: utente
+  - name: attività
+  - name: liste
+  - name: etichette
+  - name: utilità
+
+paths:
+  /utente:
+    get:
+      tags:
+        - utente
+      summary: Ottieni l'utente
+      description: Ottieni l'utente associato alla sessione corrente
+      operationId: getUtente
+      responses:
+        '200':
+          description: L'utente associato alla sessione corrente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utente'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security: 
+        - autenticato: []
+  /utente/{id}:
+    patch:
+      tags:
+        - utente
+      summary: Modifica il ruolo
+      description: Modifica il ruolo dell'utente con l'id specificato
+      operationId: modificaRuolo
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'utente
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: ruolo
+          in: query
+          description: Il nuovo ruolo dell'utente
+          required: true
+          schema:
+            type: string
+            enum:
+              - autenticato
+              - amministratore
+      responses:
+        '200':
+          description: Ruolo modificato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+    delete:
+      tags:
+        - utente
+      summary: Elimina l'utente
+      description: Elimina l'utente con l'id specificato
+      operationId: eliminaUtente
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'utente
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Utente eliminato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: L'utente non esiste
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+  /utente/login:
+    get:
+      tags:
+        - utente
+      summary: Effettua il login
+      operationId: login
+      responses:
+        '302':
+          description: Redirect alla pagina di login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+  /google/{codiceAutorizzativo}:
+    get:
+      tags:
+        - utente
+      summary: Login con Google
+      description: Verifica il codice autorizzativo fornito da Google e crea un utente
+      operationId: loginGoogle
+      parameters:
+        - name: codiceAutorizzativo
+          in: path
+          description: Il codice autorizzativo fornito da Google
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Login effettuato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Utente'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+  
+  /attività/{id}:
+    get:
+      tags:
+        - attività
+      summary: Ottieni l'attività
+      description: Ottieni l'attività con l'id specificato
+      operationId: getAttività
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: L'attività con l'id specificato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attivita'
+        '404':
+          description: L'attività non esiste
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+    put:
+      tags:
+        - attività
+      summary: Modifica l'attività
+      description: Modifica l'attività con l'id specificato
+      operationId: modificaAttività
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: L'attività modificata
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attivita'
+      responses:
+        '200':
+          description: Attività modificata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: L'attività non esiste
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /attività/{id}/valutazione:
+    get:
+      tags:
+        - attività
+      summary: Ottieni valutazione di un'attività
+      description: Ottiene la valutazione dell'utente di un'attività
+      operationId: ottieniValutazione
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Lista di valutazioni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Valutazione'
+        '204':
+          description: Nessuna valutazione trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Attività non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+    post:
+      tags:
+        - attività
+      summary: Aggiungi valutazione
+      description: Aggiunge la valutazione all'attività
+      operationId: aggiungiValutazione
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: La valutazione da aggiungere
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Valutazione'
+      responses:
+        '200':
+          description: Valutazione aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '201':
+          description: Valutazione aggiunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Attività non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /attività/{id}/segnalazioni:
+    get:
+      tags:
+        - attività
+      summary: Ottieni segnalazioni di un'attività
+      description: Ottiene tutte le segnalazioni in un'attività
+      operationId: ottieniSegnalazioni
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Lista di segnalazioni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Segnalazione'
+        '204':
+          description: Nessuna segnalazione trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Attività non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+    post:
+      tags:
+        - attività
+      summary: Aggiungi segnalazione
+      description: Aggiunge una segnalazione all'attività
+      operationId: aggiungiSegnalazione
+      parameters:
+        - name: id
+          in: path
+          description: L'id dell'attività
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: La segnalazione da aggiungere
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Segnalazione'
+      responses:
+        '200':
+          description: Segnalazione aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '201':
+          description: Segnalazione aggiunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Attività non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /catalogo:
+    get:
+      tags:
+        - attività
+      summary: Ottieni il catalogo
+      description: Ottieni il catalogo
+      operationId: getCatalogo
+      parameters:
+        - name: filtro
+          in: query
+          description: Il filtro da applicare al catalogo
+          required: false
+          schema:
+            $ref: '#/components/schemas/Filtro'
+      responses:
+        '200':
+          description: Il catalogo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attivita'
+        '204':
+          description: Nessuna attività presente nel catalogo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+    post:
+      tags:
+        - attività
+      summary: Aggiungi l'attività
+      description: Aggiungi l'attività al catalogo
+      operationId: aggiungiAttività
+      requestBody:
+        description: L'attività da aggiungere
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attivita'
+      responses:
+        '200':
+          description: Attività aggiunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attivita'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /catalogo/aggiorna:
+    get:
+      tags:
+        - attività
+      summary: Aggiorna il catalogo
+      description: Restituisce le attività aggiornate dopo la data specificata
+      operationId: aggiornaCatalogo
+      parameters:
+        - name: data
+          in: query
+          description: La data dopo la quale cercare le attività aggiornate
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Catalogo aggiornato
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attivita'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+
+  /liste:
+    get:
+      tags:
+        - liste
+      summary: Ottieni le liste
+      description: Ottieni le liste dell'utente
+      operationId: getListe
+      responses:
+        '200':
+          description: Le liste dell'utente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lista'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+    post:
+      tags:
+        - liste
+      summary: Crea lista
+      description: Crea una nuova lista
+      operationId: aggiungiLista
+      requestBody:
+        description: La lista da aggiungere
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lista'
+      responses:
+        '200':
+          description: Lista aggiunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lista'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /liste/{id}:
+    get:
+      tags:
+        - liste
+      summary: Ottieni la lista
+      description: Ottieni la lista con l'id specificato
+      operationId: getLista
+      parameters:
+        - name: id
+          in: path
+          description: L'id della lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: La lista con l'id specificato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lista'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Lista non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+    delete:
+      tags:
+        - liste
+      summary: Elimina lista
+      description: Elimina la lista con l'id specificato
+      operationId: eliminaLista
+      parameters:
+        - name: id
+          in: path
+          description: L'id della lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Lista eliminata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Lista non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+    post:
+      tags:
+        - liste
+      summary: Aggiunge attività alla lista
+      description: Aggiunge l'attività specificata alla lista
+      operationId: aggiungiAttivitaALista
+      parameters:
+        - name: id
+          in: path
+          description: L'id della lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: attivita
+          in: query
+          description: L'id dell'attività da aggiungere alla lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Attività aggiunta alla lista
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lista'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Lista non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  /liste/{id}/{indice}:
+    delete:
+      tags:
+        - liste
+      summary: Rimuovi attività dalla lista
+      description: Rimuove l'attività all'indice specificato dalla lista
+      operationId: rimuoviAttivitaDaLista
+      parameters:
+        - name: id
+          in: path
+          description: L'id della lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: indice
+          in: path
+          description: L'indice dell'attività da rimuovere dalla lista
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Attività rimossa dalla lista
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lista'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '404':
+          description: Lista non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+
+  /etichette:
+    get:
+      tags:
+        - etichette
+      summary: Ottieni tutte le etichette
+      description: Ottiene tutte le etichette
+      operationId: ottieniEtichette
+      responses:
+        '200':
+          description: Lista di etichette
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Etichetta'
+        '204':
+          description: Nessuna etichetta trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+    post:
+      tags:
+        - etichette
+      summary: Aggiungi etichetta
+      description: Aggiunge l'etichetta specificata
+      operationId: aggiungiEtichetta
+      requestBody:
+        description: L'etichetta da aggiungere
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Etichetta'
+      responses:
+        '200':
+          description: Etichetta aggiunta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etichetta'
+        '400':
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+      security:
+        - autenticato: []
+  
+  
+  /ping:
+    get:
+      tags:
+        - utilità
+      summary: Ping
+      description: Ping
+      operationId: ping
+      responses:
+        '200':
+          description: Pong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+components:
+  schemas:
+    Utente:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+          format: email
+        ruolo:
+          type: string
+          enum:
+            - autenticato
+            - amministratore
+      required:
+        - id
+        - ruolo
+    
+    Attivita:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        descrizione:
+          type: string
+        banner:
+          type: string
+          format: uri
+          description: Il link al banner dell'attività
+        informazioni:
+          $ref: '#/components/schemas/Informazioni'
+        collegamenti:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collegamento'
+        utimaModifica:
+          type: string
+          format: date-time
+        autore:
+          type: integer
+          format: int64
+        mediaValutazioni:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 5
+        numeroSegnalazioni:
+          type: integer
+          format: int64
+          minimum: 0
+      required:
+        - id
+    
+    Informazioni:
+      type: object
+      properties:
+        titlo:
+          type: string
+        età:
+          type: object
+          properties:
+            da:
+              type: integer
+              format: int64
+              minimum: 0
+            a:
+              type: integer
+              format: int64
+              minimum: 0
+        unitàDurata:
+          type: string
+          enum:
+            - minuti
+            - ore
+        durataMedia:
+          type: integer
+          format: int64
+          minimum: 0
+        giocatori:
+          type: object
+          properties:
+            da:
+              type: integer
+              format: int64
+              minimum: 0
+            a:
+              type: integer
+              format: int64
+              minimum: 0
+        giocatoriPerSquadra:
+          type: integer
+          format: int64
+          minimum: 0
+        giocatoriPerSquadraSet:
+          type: boolean
+        numeroSquadre:
+          type: integer
+          format: int64
+          minimum: 0
+        numeroSquadreSet:
+          type: boolean
+        etichette:
+          type: array
+          items:
+            $ref: '#/components/schemas/Etichetta'
+    
+    Etichetta:
+      type: object
+      properties:
+        nome:
+          type: string
+        descrizione:
+          type: string
+        categoria:
+          type: string
+      required:
+        - nome
+
+    Collegamento:
+      type: object
+      properties:
+        nome:
+          type: string
+        link:
+          type: string
+          format: uri
+      required:
+        - nome
+        - link
+
+    Filtro:
+      allOf:
+        - type: object
+          properties:
+            ultimaModifica:
+              type: string
+              format: date-time
+            autore:
+              type: integer
+              format: int64
+            mediaValutazioniMinima:
+              type: number
+              format: double
+              minimum: 0
+              maximum: 5
+            numeroSegnalazioniMinimo:
+              type: integer
+              format: int64
+              minimum: 0
+            pagina:
+              type: integer
+              format: int64
+              minimum: 0
+            limite:
+              type: integer
+              format: int64
+              minimum: 0
+              maximum: 100
+        - $ref: '#/components/schemas/Informazioni'
+   
+    Lista:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        autore:
+          type: integer
+          format: int64
+        attività:
+          type: array
+          items:
+            type: integer
+            format: int64
+        utimaModifica:
+          type: string
+          format: date-time
+      required:
+        - id
+        - nome
+        - attività
+    
+    Valutazione:
+      type: object
+      properties:
+        voto:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 5
+          multipleOf: 0.5
+        attività:
+          type: integer
+          format: int64
+        autore:
+          type: integer
+          format: int64
+      required:
+        - voto
+    
+    Segnalazione:
+      type: object
+      properties:
+        messaggio:
+          type: string
+        titolo:
+          type: string
+        attività:
+          type: integer
+          format: int64
+        autore:
+          type: integer
+          format: int64
+      required:
+        - messaggio
+        - titolo
+
+    Risposta:
+      type: object
+      properties:
+        codice:
+          type: integer
+          format: int64
+          enum:
+            - 200
+            - 201
+            - 400
+            - 401
+            - 403
+            - 404
+            - 500
+        messaggio:
+          type: string
+          default: Messaggio
+      required:
+        - codice
+        - messaggio
+  securitySchemes:
+    autenticato:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
