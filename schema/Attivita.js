@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 const InformazioniSchema = require('./Informazioni');
 const CollegamentoSchema = require('./Collegamento');
 
-module.exports = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
+const AttivitaSchema = new mongoose.Schema({
     descrizione: String,
     banner: String,
     informazioni: InformazioniSchema,
@@ -15,3 +11,7 @@ module.exports = new mongoose.Schema({
     mediaValutazioni: Number,
     numeroSegnalazioni: Number
 });
+
+AttivitaSchema.index({ultimaModifica: -1});
+
+module.exports = AttivitaSchema;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const IntervalloSchema = new mongoose.Schema({
     da: {
         type: Number,
         required: true
@@ -10,3 +10,5 @@ module.exports = new mongoose.Schema({
         required: true
     }
 });
+
+module.exports = IntervalloSchema;

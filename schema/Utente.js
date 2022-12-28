@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports= UserSchema = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
+UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
@@ -14,3 +10,7 @@ module.exports= UserSchema = new mongoose.Schema({
         required: true
     }
 });
+
+UserSchema.index({email: 1}, {unique: true});
+
+module.exports = UserSchema;

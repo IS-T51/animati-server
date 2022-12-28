@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const SegnalazioneSchema = new mongoose.Schema({
     messaggio: {
         type: String,
         required: true
@@ -18,3 +18,7 @@ module.exports = new mongoose.Schema({
         required: true
     }
 });
+
+SegnalazioneSchema.index({titolo: 1, 'attività': 1, autore: 1}, {unique: true});
+
+module.exports = SegnalazioneSchema;

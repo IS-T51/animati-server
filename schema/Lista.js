@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
-    id: {
-        type: Number,
-        required: true
-    },
+const ListaSchema = new mongoose.Schema({
     nome: {
         type: String,
         required: true
@@ -13,3 +9,7 @@ module.exports = new mongoose.Schema({
     'attività': [Number],
     ultimaModifica: Date
 });
+
+ListaSchema.index({nome: 1, autore: 1}, {unique: true});
+
+module.exports = ListaSchema;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const EtichettaSchema = new mongoose.Schema({
     nome: {
         type: String,
         required: true
@@ -14,3 +14,7 @@ module.exports = new mongoose.Schema({
         required: true
     }
 });
+
+EtichettaSchema.index({nome: 1}, {unique: true});
+
+module.exports = EtichettaSchema;

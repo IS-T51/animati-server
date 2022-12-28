@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const EtichetteSchema = require('./Etichetta');
 const IntervalloSchema = require('./Intervallo');
 
-module.exports = new mongoose.Schema({
+const InformazioniSchema = new mongoose.Schema({
     titolo: String,
     'età': IntervalloSchema,
     'unitàDurata': String,
@@ -14,3 +14,5 @@ module.exports = new mongoose.Schema({
     numeroSquadreSet: Boolean,
     etichette: [EtichetteSchema]
 });
+
+module.exports = InformazioniSchema;

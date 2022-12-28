@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
+const ValutazioneSchema = new mongoose.Schema({
     voto: {
         type: Number,
         required: true
@@ -14,3 +14,7 @@ module.exports = new mongoose.Schema({
         required: true
     }
 });
+
+ValutazioneSchema.index({'attività': 1, autore: 1}, {unique: true});
+
+module.exports = ValutazioneSchema;
