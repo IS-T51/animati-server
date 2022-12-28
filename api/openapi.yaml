@@ -7,10 +7,8 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.5
+  version: 0.0.7
 servers:
-- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.0.5
-  description: SwaggerHub API Auto Mocking
 - url: https://api.animati.app/v1
 - url: http://localhost:8080/
 tags:
@@ -49,54 +47,6 @@ paths:
       - autenticato: []
       x-swagger-router-controller: Utente
   /utente/{id}:
-    delete:
-      tags:
-      - utente
-      summary: Elimina l'utente
-      description: Elimina l'utente con l'id specificato
-      operationId: eliminaUtente
-      parameters:
-      - name: id
-        in: path
-        description: L'id dell'utente
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: Utente eliminato
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-        "401":
-          description: Autenticazione necessaria per fare questa richiesta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-        "403":
-          description: Non sei autorizzato a fare questa richiesta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-        "404":
-          description: L'utente non esiste
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-        "500":
-          description: Errore interno del server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-      x-swagger-router-controller: Utente
     patch:
       tags:
       - utente
@@ -155,6 +105,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+      security:
+      - autenticato: []
       x-swagger-router-controller: Utente
   /utente/login:
     get:
@@ -596,7 +548,7 @@ paths:
       - attivita
       summary: Aggiungi l'attività
       description: Aggiungi l'attività al catalogo
-      operationId: aggiungiAttività
+      operationId: aggiungiAttivita
       requestBody:
         description: L'attività da aggiungere
         content:

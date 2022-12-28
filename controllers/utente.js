@@ -3,16 +3,6 @@
 var utils = require('../utils/writer.js');
 var Utente = require('../service/UtenteService');
 
-module.exports.eliminaUtente = function eliminaUtente (req, res, next, id) {
-  Utente.eliminaUtente(id)
-    .then(function (response) {
-      utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-};
-
 module.exports.getUtente = function getUtente (req, res, next) {
   Utente.getUtente()
     .then(function (response) {

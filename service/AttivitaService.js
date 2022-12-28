@@ -102,7 +102,7 @@ exports.aggiornaCatalogo = function(data) {
  * body Attivita L'attività da aggiungere
  * returns Attivita
  **/
-exports.aggiungiAttività = function(body) {
+exports.aggiungiAttivita = function(body) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {

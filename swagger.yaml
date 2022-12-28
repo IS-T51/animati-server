@@ -8,7 +8,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.5
+  version: 0.0.7
 
 servers:
   - url: https://api.animati.app/v1
@@ -16,7 +16,7 @@ servers:
   
 tags:
   - name: utente
-  - name: attività
+  - name: attivita
   - name: liste
   - name: etichette
 
@@ -156,7 +156,7 @@ paths:
   /attivita/{id}:
     get:
       tags:
-        - attività
+        - attivita
       summary: Ottieni l'attività
       description: Ottieni l'attività con l'id specificato
       operationId: getAttivita
@@ -189,7 +189,7 @@ paths:
                 $ref: '#/components/schemas/Risposta'
     put:
       tags:
-        - attività
+        - attivita
       summary: Modifica l'attività
       description: Modifica l'attività con l'id specificato
       operationId: modificaAttivita
@@ -250,7 +250,7 @@ paths:
   /attivita/{id}/valutazione:
     get:
       tags:
-        - attività
+        - attivita
       summary: Ottieni valutazione di un'attività
       description: Ottiene la valutazione dell'utente di un'attività
       operationId: ottieniValutazione
@@ -299,7 +299,7 @@ paths:
         - autenticato: []
     post:
       tags:
-        - attività
+        - attivita
       summary: Aggiungi valutazione
       description: Aggiunge la valutazione all'attività
       operationId: aggiungiValutazione
@@ -360,7 +360,7 @@ paths:
   /attivita/{id}/segnalazioni:
     get:
       tags:
-        - attività
+        - attivita
       summary: Ottieni segnalazioni di un'attività
       description: Ottiene tutte le segnalazioni in un'attività
       operationId: ottieniSegnalazioni
@@ -415,7 +415,7 @@ paths:
         - autenticato: []
     post:
       tags:
-        - attività
+        - attivita
       summary: Aggiungi segnalazione
       description: Aggiunge una segnalazione all'attività
       operationId: aggiungiSegnalazione
@@ -476,7 +476,7 @@ paths:
   /catalogo:
     get:
       tags:
-        - attività
+        - attivita
       summary: Ottieni il catalogo
       description: Ottieni il catalogo
       operationId: getCatalogo
@@ -495,7 +495,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Attività'
+                  $ref: '#/components/schemas/Attivita'
         '204':
           description: Nessuna attività presente nel catalogo
           content:
@@ -516,10 +516,10 @@ paths:
                 $ref: '#/components/schemas/Risposta'
     post:
       tags:
-        - attività
+        - attivita
       summary: Aggiungi l'attività
       description: Aggiungi l'attività al catalogo
-      operationId: aggiungiAttività
+      operationId: aggiungiAttivita
       requestBody:
         description: L'attività da aggiungere
         required: true
@@ -533,7 +533,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attività'
+                $ref: '#/components/schemas/Attivita'
         '400':
           description: Richiesta non valida
           content:
@@ -557,7 +557,7 @@ paths:
   /catalogo/aggiorna:
     get:
       tags:
-        - attività
+        - attivita
       summary: Aggiorna il catalogo
       description: Restituisce le attività aggiornate dopo la data specificata
       operationId: aggiornaCatalogo

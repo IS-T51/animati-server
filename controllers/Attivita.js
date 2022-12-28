@@ -13,8 +13,8 @@ module.exports.aggiornaCatalogo = function aggiornaCatalogo (req, res, next, dat
     });
 };
 
-module.exports.aggiungiAttività = function aggiungiAttività (req, res, next, body) {
-  Attivita.aggiungiAttività(body)
+module.exports.aggiungiAttivita = function aggiungiAttivita (req, res, next, body) {
+  Attivita.aggiungiAttivita(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
