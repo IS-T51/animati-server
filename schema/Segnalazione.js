@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
-    nome: {
+    messaggio: {
         type: String,
         required: true
     },
-    descrizione: {
+    titolo: {
         type: String,
         required: true
     },
-    categoria: {
-        type: String,
+    'attività': {
+        type: Number,
+        required: true
+    },
+    autore: {
+        type: Number,
         required: true
     }
 });

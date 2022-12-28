@@ -4,7 +4,7 @@ dotenv.config();
 
 
 // Indirizzo del cluster di MongoDB Atlas
-const mongoAtlasUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/?retryWrites=true&w=majority`
+const mongoAtlasUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`
 
 // Provo a connettermi al cluster di MongoDB Atlas
 try {
@@ -22,3 +22,13 @@ try {
 const dbConnection = mongoose.connection;
 dbConnection.on("error", (err) => console.log(`Connection error ${err}`));
 dbConnection.once("open", () => console.log("Connected to DB!"));
+
+// Crea collezioni
+mongoose.pluralize(null);
+
+require('./models/Utente').createCollection();
+require('./models/Attivita').createCollection();
+require('./models/Lista').createCollection();
+require('./models/Etichetta').createCollection();
+require('./models/Valutazione').createCollection();
+require('./models/Segnalazione').createCollection();

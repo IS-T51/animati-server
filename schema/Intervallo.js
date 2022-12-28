@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
-    id: {
+    da: {
         type: Number,
         required: true
     },
-    nome: {
-        type: String,
+    a: {
+        type: Number,
         required: true
-    },
-    autore: Number,
-    'attività': [Number],
-    ultimaModifica: Date
+    }
 });
