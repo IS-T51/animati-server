@@ -1,11 +1,11 @@
 {
   "name": "animati-openapi-3-0",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "ciao",
   "main": "index.js",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "prestart": "npm install",
+    "start": "node index.js"
   },
   "keywords": [
     "swagger"
@@ -15,6 +15,7 @@
   "dependencies": {
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
+    "mongoose": "^6.8.1",
     "oas3-tools": "^2.2.3"
   }
 }

@@ -3,13 +3,12 @@ info:
   title: Animati - OpenAPI 3.0
   description: |-
     ciao
-
   contact:
     email: assistenza@animati.app
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.1
+  version: 0.0.4
 
 servers:
   - url: https://api.animati.app/v1
@@ -197,13 +196,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Risposta'
   
-  /attività/{id}:
+  /attivit%C3%A0/{id}:
     get:
       tags:
         - attività
       summary: Ottieni l'attività
       description: Ottieni l'attività con l'id specificato
-      operationId: getAttività
+      operationId: getAttivita
       parameters:
         - name: id
           in: path
@@ -218,7 +217,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attivita'
+                $ref: '#/components/schemas/Attività'
         '404':
           description: L'attività non esiste
           content:
@@ -236,7 +235,7 @@ paths:
         - attività
       summary: Modifica l'attività
       description: Modifica l'attività con l'id specificato
-      operationId: modificaAttività
+      operationId: modificaAttivita
       parameters:
         - name: id
           in: path
@@ -251,7 +250,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Attivita'
+              $ref: '#/components/schemas/Attività'
       responses:
         '200':
           description: Attività modificata
@@ -291,7 +290,7 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
         - autenticato: []
-  /attività/{id}/valutazione:
+  /attivit%C3%A0/{id}/valutazione:
     get:
       tags:
         - attività
@@ -401,7 +400,7 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
         - autenticato: []
-  /attività/{id}/segnalazioni:
+  /attivit%C3%A0/{id}/segnalazioni:
     get:
       tags:
         - attività
@@ -539,7 +538,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Attivita'
+                  $ref: '#/components/schemas/Attività'
         '204':
           description: Nessuna attività presente nel catalogo
           content:
@@ -570,14 +569,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Attivita'
+              $ref: '#/components/schemas/Attività'
       responses:
         '200':
           description: Attività aggiunta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attivita'
+                $ref: '#/components/schemas/Attività'
         '400':
           description: Richiesta non valida
           content:
@@ -621,7 +620,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Attivita'
+                  $ref: '#/components/schemas/Attività'
         '400':
           description: Richiesta non valida
           content:
@@ -1030,7 +1029,7 @@ components:
         - email
         - ruolo
     
-    Attivita:
+    Attività:
       type: object
       properties:
         id:
@@ -1074,16 +1073,7 @@ components:
         titlo:
           type: string
         età:
-          type: object
-          properties:
-            da:
-              type: integer
-              format: int64
-              minimum: 0
-            a:
-              type: integer
-              format: int64
-              minimum: 0
+          $ref: '#/components/schemas/Intervallo'
         unitàDurata:
           type: string
           enum:
@@ -1094,16 +1084,7 @@ components:
           format: int64
           minimum: 0
         giocatori:
-          type: object
-          properties:
-            da:
-              type: integer
-              format: int64
-              minimum: 0
-            a:
-              type: integer
-              format: int64
-              minimum: 0
+          $ref: '#/components/schemas/Intervallo'
         giocatoriPerSquadra:
           type: integer
           format: int64
@@ -1245,6 +1226,18 @@ components:
       required:
         - messaggio
         - titolo
+    
+    Intervallo:
+      type: object
+      properties:
+        da:
+          type: integer
+          format: int64
+          minimum: 0
+        a:
+          type: integer
+          format: int64
+          minimum: 0
 
     Risposta:
       type: object

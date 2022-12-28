@@ -43,8 +43,8 @@ module.exports.aggiungiValutazione = function aggiungiValutazione (req, res, nex
     });
 };
 
-module.exports.getAttività = function getAttività (req, res, next, id) {
-  Attivit.getAttività(id)
+module.exports.getAttivita = function getAttivita (req, res, next, id) {
+  Attivit.getAttivita(id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -63,8 +63,8 @@ module.exports.getCatalogo = function getCatalogo (req, res, next, filtro) {
     });
 };
 
-module.exports.modificaAttività = function modificaAttività (req, res, next, body, id) {
-  Attivit.modificaAttività(body, id)
+module.exports.modificaAttivita = function modificaAttivita (req, res, next, body, id) {
+  Attivit.modificaAttivita(body, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
