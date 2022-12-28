@@ -1,0 +1,24 @@
+'use strict';
+
+var utils = require('../utils/writer.js');
+var Etichette = require('../service/EtichetteService');
+
+module.exports.aggiungiEtichetta = function aggiungiEtichetta (req, res, next, body) {
+  Etichette.aggiungiEtichetta(body)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.ottieniEtichette = function ottieniEtichette (req, res, next) {
+  Etichette.ottieniEtichette()
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
