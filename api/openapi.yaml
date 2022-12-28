@@ -7,13 +7,15 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.4
+  version: 0.0.5
 servers:
+- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.0.5
+  description: SwaggerHub API Auto Mocking
 - url: https://api.animati.app/v1
 - url: http://localhost:8080/
 tags:
 - name: utente
-- name: attività
+- name: attivita
 - name: liste
 - name: etichette
 paths:
@@ -204,10 +206,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Risposta'
       x-swagger-router-controller: Utente
-  /attivit%C3%A0/{id}:
+  /attivita/{id}:
     get:
       tags:
-      - attività
+      - attivita
       summary: Ottieni l'attività
       description: Ottieni l'attività con l'id specificato
       operationId: getAttivita
@@ -227,7 +229,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attività'
+                $ref: '#/components/schemas/Attivita'
         "404":
           description: L'attività non esiste
           content:
@@ -240,10 +242,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
     put:
       tags:
-      - attività
+      - attivita
       summary: Modifica l'attività
       description: Modifica l'attività con l'id specificato
       operationId: modificaAttivita
@@ -262,7 +264,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Attività'
+              $ref: '#/components/schemas/Attivita'
         required: true
       responses:
         "200":
@@ -303,11 +305,11 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
-  /attivit%C3%A0/{id}/valutazione:
+      x-swagger-router-controller: Attivita
+  /attivita/{id}/valutazione:
     get:
       tags:
-      - attività
+      - attivita
       summary: Ottieni valutazione di un'attività
       description: Ottiene la valutazione dell'utente di un'attività
       operationId: ottieniValutazione
@@ -357,10 +359,10 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
     post:
       tags:
-      - attività
+      - attivita
       summary: Aggiungi valutazione
       description: Aggiunge la valutazione all'attività
       operationId: aggiungiValutazione
@@ -420,11 +422,11 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
-  /attivit%C3%A0/{id}/segnalazioni:
+      x-swagger-router-controller: Attivita
+  /attivita/{id}/segnalazioni:
     get:
       tags:
-      - attività
+      - attivita
       summary: Ottieni segnalazioni di un'attività
       description: Ottiene tutte le segnalazioni in un'attività
       operationId: ottieniSegnalazioni
@@ -480,10 +482,10 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
     post:
       tags:
-      - attività
+      - attivita
       summary: Aggiungi segnalazione
       description: Aggiunge una segnalazione all'attività
       operationId: aggiungiSegnalazione
@@ -543,11 +545,11 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
   /catalogo:
     get:
       tags:
-      - attività
+      - attivita
       summary: Ottieni il catalogo
       description: Ottieni il catalogo
       operationId: getCatalogo
@@ -568,7 +570,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Attività'
+                  $ref: '#/components/schemas/Attivita'
                 x-content-type: application/json
         "204":
           description: Nessuna attività presente nel catalogo
@@ -588,10 +590,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
     post:
       tags:
-      - attività
+      - attivita
       summary: Aggiungi l'attività
       description: Aggiungi l'attività al catalogo
       operationId: aggiungiAttività
@@ -600,7 +602,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Attività'
+              $ref: '#/components/schemas/Attivita'
         required: true
       responses:
         "200":
@@ -608,7 +610,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attività'
+                $ref: '#/components/schemas/Attivita'
         "400":
           description: Richiesta non valida
           content:
@@ -629,11 +631,11 @@ paths:
                 $ref: '#/components/schemas/Risposta'
       security:
       - autenticato: []
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
   /catalogo/aggiorna:
     get:
       tags:
-      - attività
+      - attivita
       summary: Aggiorna il catalogo
       description: Restituisce le attività aggiornate dopo la data specificata
       operationId: aggiornaCatalogo
@@ -655,7 +657,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Attività'
+                  $ref: '#/components/schemas/Attivita'
                 x-content-type: application/json
         "400":
           description: Richiesta non valida
@@ -669,7 +671,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-      x-swagger-router-controller: Attivit
+      x-swagger-router-controller: Attivita
   /liste:
     get:
       tags:
@@ -1087,7 +1089,7 @@ components:
         ruolo: autenticato
         id: 0
         email: ""
-    Attività:
+    Attivita:
       required:
       - id
       type: object

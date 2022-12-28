@@ -99,8 +99,8 @@ exports.aggiornaCatalogo = function(data) {
  * Aggiungi l'attività
  * Aggiungi l'attività al catalogo
  *
- * body Attività L'attività da aggiungere
- * returns Attività
+ * body Attivita L'attività da aggiungere
+ * returns Attivita
  **/
 exports.aggiungiAttività = function(body) {
   return new Promise(function(resolve, reject) {
@@ -205,7 +205,7 @@ exports.aggiungiValutazione = function(body,id) {
  * Ottieni l'attività con l'id specificato
  *
  * id Long L'id dell'attività
- * returns Attività
+ * returns Attivita
  **/
 exports.getAttivita = function(id) {
   return new Promise(function(resolve, reject) {
@@ -355,7 +355,7 @@ exports.getCatalogo = function(filtro) {
  * Modifica l'attività
  * Modifica l'attività con l'id specificato
  *
- * body Attività L'attività modificata
+ * body Attivita L'attività modificata
  * id Long L'id dell'attività
  * returns Risposta
  **/

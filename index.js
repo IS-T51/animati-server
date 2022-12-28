@@ -10,7 +10,7 @@ var serverPort = 8080;
 var options = {
     routing: {
         controllers: path.join(__dirname, './controllers')
-    }
+    },
 };
 
 var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);

@@ -1,10 +1,10 @@
 'use strict';
 
 var utils = require('../utils/writer.js');
-var Attivit = require('../service/AttivitService');
+var Attivita = require('../service/AttivitaService');
 
 module.exports.aggiornaCatalogo = function aggiornaCatalogo (req, res, next, data) {
-  Attivit.aggiornaCatalogo(data)
+  Attivita.aggiornaCatalogo(data)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -14,7 +14,7 @@ module.exports.aggiornaCatalogo = function aggiornaCatalogo (req, res, next, dat
 };
 
 module.exports.aggiungiAttività = function aggiungiAttività (req, res, next, body) {
-  Attivit.aggiungiAttività(body)
+  Attivita.aggiungiAttività(body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -24,7 +24,7 @@ module.exports.aggiungiAttività = function aggiungiAttività (req, res, next, b
 };
 
 module.exports.aggiungiSegnalazione = function aggiungiSegnalazione (req, res, next, body, id) {
-  Attivit.aggiungiSegnalazione(body, id)
+  Attivita.aggiungiSegnalazione(body, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -34,7 +34,7 @@ module.exports.aggiungiSegnalazione = function aggiungiSegnalazione (req, res, n
 };
 
 module.exports.aggiungiValutazione = function aggiungiValutazione (req, res, next, body, id) {
-  Attivit.aggiungiValutazione(body, id)
+  Attivita.aggiungiValutazione(body, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -44,7 +44,7 @@ module.exports.aggiungiValutazione = function aggiungiValutazione (req, res, nex
 };
 
 module.exports.getAttivita = function getAttivita (req, res, next, id) {
-  Attivit.getAttivita(id)
+  Attivita.getAttivita(id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -54,7 +54,7 @@ module.exports.getAttivita = function getAttivita (req, res, next, id) {
 };
 
 module.exports.getCatalogo = function getCatalogo (req, res, next, filtro) {
-  Attivit.getCatalogo(filtro)
+  Attivita.getCatalogo(filtro)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -64,7 +64,7 @@ module.exports.getCatalogo = function getCatalogo (req, res, next, filtro) {
 };
 
 module.exports.modificaAttivita = function modificaAttivita (req, res, next, body, id) {
-  Attivit.modificaAttivita(body, id)
+  Attivita.modificaAttivita(body, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -74,7 +74,7 @@ module.exports.modificaAttivita = function modificaAttivita (req, res, next, bod
 };
 
 module.exports.ottieniSegnalazioni = function ottieniSegnalazioni (req, res, next, id) {
-  Attivit.ottieniSegnalazioni(id)
+  Attivita.ottieniSegnalazioni(id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -84,7 +84,7 @@ module.exports.ottieniSegnalazioni = function ottieniSegnalazioni (req, res, nex
 };
 
 module.exports.ottieniValutazione = function ottieniValutazione (req, res, next, id) {
-  Attivit.ottieniValutazione(id)
+  Attivita.ottieniValutazione(id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
