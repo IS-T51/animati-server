@@ -8,14 +8,14 @@
  * body Etichetta L'etichetta da aggiungere
  * returns Etichetta
  **/
-exports.aggiungiEtichetta = function (body) {
-  return new Promise(function (resolve, reject) {
+exports.aggiungiEtichetta = function(body) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "descrizione": "descrizione",
-      "categoria": "categoria",
-      "nome": "nome"
-    };
+  "descrizione" : "descrizione",
+  "categoria" : "categoria",
+  "nome" : "nome"
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -31,18 +31,18 @@ exports.aggiungiEtichetta = function (body) {
  *
  * returns List
  **/
-exports.ottieniEtichette = function () {
-  return new Promise(function (resolve, reject) {
+exports.ottieniEtichette = function() {
+  return new Promise(function(resolve, reject) {
     var examples = {};
-    examples['application/json'] = [{
-      "descrizione": "descrizione",
-      "categoria": "categoria",
-      "nome": "nome"
-    }, {
-      "descrizione": "descrizione",
-      "categoria": "categoria",
-      "nome": "nome"
-    }];
+    examples['application/json'] = [ {
+  "descrizione" : "descrizione",
+  "categoria" : "categoria",
+  "nome" : "nome"
+}, {
+  "descrizione" : "descrizione",
+  "categoria" : "categoria",
+  "nome" : "nome"
+} ];
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -50,3 +50,4 @@ exports.ottieniEtichette = function () {
     }
   });
 }
+

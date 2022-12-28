@@ -9,16 +9,16 @@
  * attivita Long L'id dell'attività da aggiungere alla lista
  * returns Lista
  **/
-exports.aggiungiAttivitaALista = function (id, attivita) {
-  return new Promise(function (resolve, reject) {
+exports.aggiungiAttivitaALista = function(id,attivita) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "attività": [1, 1],
-      "nome": "nome",
-      "id": 0,
-      "utimaModifica": "2000-01-23T04:56:07.000+00:00",
-      "autore": 6
-    };
+  "attività" : [ 1, 1 ],
+  "nome" : "nome",
+  "id" : 0,
+  "utimaModifica" : "2000-01-23T04:56:07.000+00:00",
+  "autore" : 6
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -35,16 +35,16 @@ exports.aggiungiAttivitaALista = function (id, attivita) {
  * body Lista La lista da aggiungere
  * returns Lista
  **/
-exports.aggiungiLista = function (body) {
-  return new Promise(function (resolve, reject) {
+exports.aggiungiLista = function(body) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "attività": [1, 1],
-      "nome": "nome",
-      "id": 0,
-      "utimaModifica": "2000-01-23T04:56:07.000+00:00",
-      "autore": 6
-    };
+  "attività" : [ 1, 1 ],
+  "nome" : "nome",
+  "id" : 0,
+  "utimaModifica" : "2000-01-23T04:56:07.000+00:00",
+  "autore" : 6
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -61,13 +61,13 @@ exports.aggiungiLista = function (body) {
  * id Long L'id della lista
  * returns Risposta
  **/
-exports.eliminaLista = function (id) {
-  return new Promise(function (resolve, reject) {
+exports.eliminaLista = function(id) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "messaggio": "Messaggio",
-      "codice": 0
-    };
+  "messaggio" : "Messaggio",
+  "codice" : 0
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -84,16 +84,16 @@ exports.eliminaLista = function (id) {
  * id Long L'id della lista
  * returns Lista
  **/
-exports.getLista = function (id) {
-  return new Promise(function (resolve, reject) {
+exports.getLista = function(id) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "attività": [1, 1],
-      "nome": "nome",
-      "id": 0,
-      "utimaModifica": "2000-01-23T04:56:07.000+00:00",
-      "autore": 6
-    };
+  "attività" : [ 1, 1 ],
+  "nome" : "nome",
+  "id" : 0,
+  "utimaModifica" : "2000-01-23T04:56:07.000+00:00",
+  "autore" : 6
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -109,16 +109,16 @@ exports.getLista = function (id) {
  *
  * returns Lista
  **/
-exports.getListe = function () {
-  return new Promise(function (resolve, reject) {
+exports.getListe = function() {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "attività": [1, 1],
-      "nome": "nome",
-      "id": 0,
-      "utimaModifica": "2000-01-23T04:56:07.000+00:00",
-      "autore": 6
-    };
+  "attività" : [ 1, 1 ],
+  "nome" : "nome",
+  "id" : 0,
+  "utimaModifica" : "2000-01-23T04:56:07.000+00:00",
+  "autore" : 6
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -136,16 +136,16 @@ exports.getListe = function () {
  * indice Long L'indice dell'attività da rimuovere dalla lista
  * returns Lista
  **/
-exports.rimuoviAttivitaDaLista = function (id, indice) {
-  return new Promise(function (resolve, reject) {
+exports.rimuoviAttivitaDaLista = function(id,indice) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "attività": [1, 1],
-      "nome": "nome",
-      "id": 0,
-      "utimaModifica": "2000-01-23T04:56:07.000+00:00",
-      "autore": 6
-    };
+  "attività" : [ 1, 1 ],
+  "nome" : "nome",
+  "id" : 0,
+  "utimaModifica" : "2000-01-23T04:56:07.000+00:00",
+  "autore" : 6
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -153,3 +153,4 @@ exports.rimuoviAttivitaDaLista = function (id, indice) {
     }
   });
 }
+

@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.1
+  version: 0.0.2
 servers:
 - url: https://api.animati.app/v1
 - url: http://localhost:8080/
@@ -1162,7 +1162,7 @@ components:
         titlo:
           type: string
         età:
-          $ref: '#/components/schemas/Informazioni_et'
+          $ref: '#/components/schemas/Intervallo'
         unitàDurata:
           type: string
           enum:
@@ -1173,7 +1173,7 @@ components:
           type: integer
           format: int64
         giocatori:
-          $ref: '#/components/schemas/Informazioni_et'
+          $ref: '#/components/schemas/Intervallo'
         giocatoriPerSquadra:
           minimum: 0
           type: integer
@@ -1352,6 +1352,20 @@ components:
         titolo: titolo
         messaggio: messaggio
         autore: 6
+    Intervallo:
+      type: object
+      properties:
+        da:
+          minimum: 0
+          type: integer
+          format: int64
+        a:
+          minimum: 0
+          type: integer
+          format: int64
+      example:
+        a: 0
+        da: 0
     Risposta:
       required:
       - codice
@@ -1377,20 +1391,6 @@ components:
       example:
         messaggio: Messaggio
         codice: 0
-    Informazioni_et:
-      type: object
-      properties:
-        da:
-          minimum: 0
-          type: integer
-          format: int64
-        a:
-          minimum: 0
-          type: integer
-          format: int64
-      example:
-        a: 0
-        da: 0
   securitySchemes:
     autenticato:
       type: http

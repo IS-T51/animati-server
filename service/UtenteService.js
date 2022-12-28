@@ -8,13 +8,13 @@
  * id Long L'id dell'utente
  * returns Risposta
  **/
-exports.eliminaUtente = function (id) {
-  return new Promise(function (resolve, reject) {
+exports.eliminaUtente = function(id) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "messaggio": "Messaggio",
-      "codice": 0
-    };
+  "messaggio" : "Messaggio",
+  "codice" : 0
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -30,14 +30,14 @@ exports.eliminaUtente = function (id) {
  *
  * returns Utente
  **/
-exports.getUtente = function () {
-  return new Promise(function (resolve, reject) {
+exports.getUtente = function() {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "ruolo": "autenticato",
-      "id": 0,
-      "email": ""
-    };
+  "ruolo" : "autenticato",
+  "id" : 0,
+  "email" : ""
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -52,8 +52,8 @@ exports.getUtente = function () {
  *
  * no response value expected for this operation
  **/
-exports.login = function () {
-  return new Promise(function (resolve, reject) {
+exports.login = function() {
+  return new Promise(function(resolve, reject) {
     resolve();
   });
 }
@@ -66,14 +66,14 @@ exports.login = function () {
  * codiceAutorizzativo String Il codice autorizzativo fornito da Google
  * returns Utente
  **/
-exports.loginGoogle = function (codiceAutorizzativo) {
-  return new Promise(function (resolve, reject) {
+exports.loginGoogle = function(codiceAutorizzativo) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "ruolo": "autenticato",
-      "id": 0,
-      "email": ""
-    };
+  "ruolo" : "autenticato",
+  "id" : 0,
+  "email" : ""
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -91,13 +91,13 @@ exports.loginGoogle = function (codiceAutorizzativo) {
  * ruolo String Il nuovo ruolo dell'utente
  * returns Risposta
  **/
-exports.modificaRuolo = function (id, ruolo) {
-  return new Promise(function (resolve, reject) {
+exports.modificaRuolo = function(id,ruolo) {
+  return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-      "messaggio": "Messaggio",
-      "codice": 0
-    };
+  "messaggio" : "Messaggio",
+  "codice" : 0
+};
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
@@ -105,3 +105,4 @@ exports.modificaRuolo = function (id, ruolo) {
     }
   });
 }
+
