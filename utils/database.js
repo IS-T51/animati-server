@@ -30,12 +30,12 @@ function disconnect() {
 
 function createCollections() {
     // Crea collezioni
-    require('./models/Utente').createCollection();
-    require('./models/Attivita').createCollection();
-    require('./models/Lista').createCollection();
-    require('./models/Etichetta').createCollection();
-    require('./models/Valutazione').createCollection();
-    require('./models/Segnalazione').createCollection();
+    require('../models/Utente').createCollection();
+    require('../models/Attivita').createCollection();
+    require('../models/Lista').createCollection();
+    require('../models/Etichetta').createCollection();
+    require('../models/Valutazione').createCollection();
+    require('../models/Segnalazione').createCollection();
 }
 
 module.exports = {
