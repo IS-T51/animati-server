@@ -22,7 +22,7 @@ http.createServer(app).listen(serverPort, function () {
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
 });
 
-const database = require('./utils/database');
+const database = require.main.require('./utils/database');
 database.connect();
 database.createCollections();
 

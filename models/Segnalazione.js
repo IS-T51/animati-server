@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const SegnalazioneSchema = require('../schema/Segnalazione');
+const SegnalazioneSchema = require.main.require('./schema/Segnalazione');
 
 mongoose.pluralize(null);
 

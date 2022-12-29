@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require('../utils/writer.js');
-var Liste = require('../service/ListeService');
+var utils = require.main.require('./utils/writer.js');
+var Liste = require.main.require('./service/ListeService');
 
 module.exports.aggiungiAttivitaALista = function aggiungiAttivitaALista (req, res, next, id, attivita) {
   Liste.aggiungiAttivitaALista(id, attivita)

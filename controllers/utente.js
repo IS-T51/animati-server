@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require('../utils/writer.js');
-var Utente = require('../service/UtenteService');
+var utils = require.main.require('./utils/writer.js');
+var Utente = require.main.require('./service/UtenteService');
 
 module.exports.getUtente = function getUtente (req, res, next) {
   Utente.getUtente(req)

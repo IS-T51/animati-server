@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ListaSchema = require('../schema/Lista');
+const ListaSchema = require.main.require('./schema/Lista');
 
 mongoose.pluralize(null);
 
