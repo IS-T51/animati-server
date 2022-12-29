@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const EtichettaSchema = require.main.require('./schema/Etichetta');
+const EtichettaSchema = require('../schema/Etichetta');
 
 mongoose.pluralize(null);
 

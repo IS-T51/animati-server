@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require.main.require('./utils/writer.js');
-var Etichette = require.main.require('./service/EtichetteService');
+var utils = require('../utils/writer.js');
+var Etichette = require('../service/EtichetteService');
 
 module.exports.aggiungiEtichetta = function aggiungiEtichetta (req, res, next, body) {
   Etichette.aggiungiEtichetta(req, body)

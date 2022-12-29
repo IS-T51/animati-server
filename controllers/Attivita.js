@@ -1,7 +1,7 @@
 'use strict';
 
-var utils = require.main.require('./utils/writer.js');
-var Attivita = require.main.require('./service/AttivitaService');
+var utils = require('../utils/writer.js');
+var Attivita = require('../service/AttivitaService');
 
 module.exports.aggiornaCatalogo = function aggiornaCatalogo (req, res, next, data) {
   Attivita.aggiornaCatalogo(data)

@@ -1,8 +1,8 @@
 'use strict';
 
-var utils = require.main.require('./utils/writer.js');
-const Etichetta = require.main.require('./models/Etichetta');
-const UtenteService = require.main.require('./service/UtenteService');
+var utils = require('../utils/writer.js');
+const Etichetta = require('../models/Etichetta');
+const UtenteService = require('./UtenteService');
 
 /**
  * Aggiungi etichetta

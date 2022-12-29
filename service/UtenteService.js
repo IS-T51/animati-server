@@ -1,9 +1,9 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
-const Utente = require.main.require('./models/Utente');
+const Utente = require('../models/Utente');
 const dotenv = require('dotenv');
-const utils = require.main.require('./utils/writer.js');
+const utils = require('../utils/writer.js');
 dotenv.config();
 
 /**

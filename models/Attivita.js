@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const AttivitaSchema = require.main.require('./schema/Attivita');
+const AttivitaSchema = require('../schema/Attivita');
 
 mongoose.pluralize(null);
 

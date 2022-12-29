@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ValutazioneSchema = require.main.require('./schema/Valutazione');
+const ValutazioneSchema = require('../schema/Valutazione');
 
 mongoose.pluralize(null);
 
