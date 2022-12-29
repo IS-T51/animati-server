@@ -17,11 +17,10 @@ exports.getUtente = function(req) {
     // Ottengo Token
     const token = req.headers.authorization.replace(/^Bearer\s/, '');
     if (!token) {
-      reject(utils.respondWithCode(401, {
+      return reject(utils.respondWithCode(401, {
         "messaggio" : "Autenticazione necessaria per fare questa richiesta",
         "codice" : 401
       }));
-      return;
     } 
     // Verifico Token
     jwt.verify(token, process.env.JWT_SECRET_KEY, function(err, decoded) {

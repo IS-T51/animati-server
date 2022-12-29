@@ -9,7 +9,7 @@ info:
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
   version: 0.0.8
 servers:
-- url: https://api.animati.app/v1
+- url: https://api.animati.app/
 - url: http://localhost:8080/
 tags:
 - name: utente
