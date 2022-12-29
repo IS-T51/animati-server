@@ -4,8 +4,8 @@ var utils = require('../utils/writer.js');
 var Utente = require('../service/UtenteService');
 
 module.exports.getUtente = function getUtente (req, res, next) {
-  Utente.getUtente()
-    .then(function (response) {
+  Utente.getUtente(req)
+  .then(function (response) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {

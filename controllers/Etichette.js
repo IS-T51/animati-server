@@ -4,7 +4,7 @@ var utils = require('../utils/writer.js');
 var Etichette = require('../service/EtichetteService');
 
 module.exports.aggiungiEtichetta = function aggiungiEtichetta (req, res, next, body) {
-  Etichette.aggiungiEtichetta(body)
+  Etichette.aggiungiEtichetta(req, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })

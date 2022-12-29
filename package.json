@@ -4,8 +4,8 @@
   "description": "ciao",
   "main": "index.js",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "prestart": "npm install",
+    "start": "node index.js"
   },
   "keywords": [
     "swagger"
@@ -14,7 +14,10 @@
   "private": true,
   "dependencies": {
     "connect": "^3.2.0",
+    "dotenv": "^16.0.3",
     "js-yaml": "^3.3.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.2",
     "oas3-tools": "^2.2.3"
   }
 }

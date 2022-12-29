@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.7
+  version: 0.0.8
 servers:
 - url: https://api.animati.app/v1
 - url: http://localhost:8080/
@@ -36,13 +36,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Utente
@@ -86,25 +86,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Utente
@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Utente
   /google/{codiceAutorizzativo}:
     get:
@@ -150,13 +150,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Utente
   /attivita/{id}:
     get:
@@ -187,13 +187,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Attivita
     put:
       tags:
@@ -230,31 +230,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: L'attività non esiste
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -296,19 +296,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -353,25 +353,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -413,25 +413,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -482,19 +482,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -535,13 +535,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Attivita
     post:
       tags:
@@ -568,19 +568,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Attivita
@@ -616,13 +616,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Attivita
   /liste:
     get:
@@ -643,13 +643,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -678,19 +678,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -723,25 +723,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -782,31 +782,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -838,25 +838,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -898,31 +898,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
@@ -954,7 +954,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Etichette
     post:
       tags:
@@ -981,25 +981,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
       - autenticato: []
       x-swagger-router-controller: Etichette
@@ -1320,6 +1320,29 @@ components:
       example:
         a: 0
         da: 0
+    Errore:
+      required:
+      - code
+      - messaggio
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+          readOnly: true
+          enum:
+          - 401
+          - 403
+          - 404
+          - 500
+          default: 401
+        messaggio:
+          type: string
+          readOnly: true
+          default: Autenticazione necessaria per fare questa richiesta
+        errore:
+          type: object
+          readOnly: true
     Risposta:
       required:
       - codice
@@ -1333,17 +1356,12 @@ components:
           enum:
           - 200
           - 201
-          - 400
-          - 401
-          - 403
-          - 404
-          - 500
+          - 204
         messaggio:
           type: string
           readOnly: true
-          default: Messaggio
       example:
-        messaggio: Messaggio
+        messaggio: messaggio
         codice: 0
   securitySchemes:
     autenticato:

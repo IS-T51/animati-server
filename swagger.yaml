@@ -8,7 +8,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.7
+  version: 0.0.8
 
 servers:
   - url: https://api.animati.app/v1
@@ -40,13 +40,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security: 
         - autenticato: []
   /utente/{id}:
@@ -85,25 +85,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /utente/login:
@@ -118,7 +118,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
   /google/{codiceAutorizzativo}:
     get:
       tags:
@@ -145,13 +145,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
   
   /attivita/{id}:
     get:
@@ -180,13 +180,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
     put:
       tags:
         - attivita
@@ -220,31 +220,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: L'attività non esiste
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /attivita/{id}/valutazione:
@@ -282,19 +282,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
     post:
@@ -336,25 +336,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /attivita/{id}/segnalazioni:
@@ -392,25 +392,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
     post:
@@ -458,19 +458,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Attività non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /catalogo:
@@ -507,13 +507,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
     post:
       tags:
         - attivita
@@ -539,19 +539,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /catalogo/aggiorna:
@@ -583,13 +583,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
 
   /liste:
     get:
@@ -610,13 +610,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
     post:
@@ -644,19 +644,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /liste/{id}:
@@ -686,25 +686,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
     delete:
@@ -733,25 +733,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
     post:
@@ -787,31 +787,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   /liste/{id}/{indice}:
@@ -848,31 +848,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '404':
           description: Lista non trovata
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
 
@@ -903,7 +903,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
     post:
       tags:
         - etichette
@@ -929,25 +929,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '401':
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '403':
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         '500':
           description: Errore interno del server
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
   
@@ -1196,6 +1196,29 @@ components:
           format: int64
           minimum: 0
 
+    Errore:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+          enum:
+            - 401
+            - 403
+            - 404
+            - 500
+          readOnly: true
+          default: 401
+        messaggio:
+          type: string
+          default: Autenticazione necessaria per fare questa richiesta
+          readOnly: true
+        errore:
+          type: object
+          readOnly: true
+      required:
+        - code
+        - messaggio
     Risposta:
       type: object
       properties:
@@ -1205,15 +1228,11 @@ components:
           enum:
             - 200
             - 201
-            - 400
-            - 401
-            - 403
-            - 404
-            - 500
+            - 204
           readOnly: true
         messaggio:
           type: string
-          default: Messaggio
+          default: 
           readOnly: true
       required:
         - codice
