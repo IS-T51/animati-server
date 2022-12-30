@@ -83,6 +83,35 @@ exports.loginGoogle = function(codiceAutorizzativo) {
   });
 }
 
+/**
+ * Ottieni gli utenti
+ * Ottieni gli utenti iscritti all'applicativo
+ *
+ * returns List
+ **/
+ exports.getUtenti = function() {
+  return new Promise(function(resolve, reject) {
+    var examples = {};
+    examples['application/json'] = [ {
+  "ruolo" : "autenticato",
+  "promossoDa" : "promossoDa",
+  "id" : "id",
+  "immagine" : "http://example.com/aeiou",
+  "email" : ""
+}, {
+  "ruolo" : "autenticato",
+  "promossoDa" : "promossoDa",
+  "id" : "id",
+  "immagine" : "http://example.com/aeiou",
+  "email" : ""
+} ];
+    if (Object.keys(examples).length > 0) {
+      resolve(examples[Object.keys(examples)[0]]);
+    } else {
+      resolve();
+    }
+  });
+}
 
 /**
  * Modifica il ruolo

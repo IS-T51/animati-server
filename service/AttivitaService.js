@@ -13,7 +13,6 @@ exports.aggiornaCatalogo = function(data) {
     var examples = {};
     examples['application/json'] = [ {
   "numeroSegnalazioni" : 0,
-  "descrizione" : "descrizione",
   "mediaValutazioni" : 4.650722121966288,
   "banner" : "http://example.com/aeiou",
   "id" : 0,

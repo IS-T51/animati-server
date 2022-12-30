@@ -8,6 +8,13 @@ UserSchema = new mongoose.Schema({
     ruolo: {
         type: String,
         required: true
+    },
+    promossoDa: {
+        type: mongoose.ObjectId,
+        ref: 'Utenti',
+    },
+    immagine: {
+        type: String
     }
 });
 

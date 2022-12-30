@@ -6,11 +6,13 @@ const ValutazioneSchema = new mongoose.Schema({
         required: true
     },
     'attività': {
-        type: Number,
+        type: mongoose.ObjectId,
+        ref: 'Catalogo',
         required: true
     },
     autore: {
-        type: Number,
+        type: mongoose.ObjectId,
+        ref: 'Utenti',
         required: true
     }
 });

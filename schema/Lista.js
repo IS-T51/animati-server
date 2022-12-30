@@ -5,8 +5,13 @@ const ListaSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    autore: Number,
-    'attività': [Number],
+    autore: String,
+    'attività': [
+        {
+            type: mongoose.ObjectId,
+            ref: 'Catalogo',
+        }
+    ],
     ultimaModifica: Date
 });
 

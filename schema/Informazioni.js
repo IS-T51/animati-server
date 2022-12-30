@@ -4,9 +4,10 @@ const IntervalloSchema = require('./Intervallo');
 
 const InformazioniSchema = new mongoose.Schema({
     titolo: String,
+    descrizione: String,
     'età': IntervalloSchema,
     'unitàDurata': String,
-    'durataMedia': Number,
+    durataMedia: Number,
     giocatori: IntervalloSchema,
     giocatoriPerSquadra: Number,
     giocatoriPerSquadraSet: Boolean,

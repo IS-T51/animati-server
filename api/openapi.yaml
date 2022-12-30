@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.8
+  version: 0.1.1
 servers:
 - url: https://api.animati.app/
 - url: http://localhost:8080/
@@ -46,6 +46,44 @@ paths:
       security:
       - autenticato: []
       x-swagger-router-controller: Utente
+  /utenti:
+    get:
+      tags:
+      - utente
+      summary: Ottieni gli utenti
+      description: Ottieni gli utenti iscritti all'applicativo
+      operationId: getUtenti
+      responses:
+        "200":
+          description: Lista di utenti
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Utente'
+                x-content-type: application/json
+        "401":
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "403":
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "500":
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+      security:
+      - autenticato: []
+      x-swagger-router-controller: Utente
   /utente/{id}:
     patch:
       tags:
@@ -61,8 +99,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       - name: ruolo
         in: query
         description: Il nuovo ruolo dell'utente
@@ -173,8 +211,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: L'attività con l'id specificato
@@ -209,8 +247,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       requestBody:
         description: L'attività modificata
         content:
@@ -273,8 +311,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: Lista di valutazioni
@@ -326,8 +364,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       requestBody:
         description: La valutazione da aggiungere
         content:
@@ -390,8 +428,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: Lista di segnalazioni
@@ -449,8 +487,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       requestBody:
         description: La segnalazione da aggiungere
         content:
@@ -694,7 +732,7 @@ paths:
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
-  /liste/{id}:
+  /lista/{id}:
     get:
       tags:
       - liste
@@ -709,8 +747,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: La lista con l'id specificato
@@ -759,8 +797,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       - name: attivita
         in: query
         description: L'id dell'attività da aggiungere alla lista
@@ -768,8 +806,8 @@ paths:
         style: form
         explode: true
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: Attività aggiunta alla lista
@@ -824,8 +862,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       responses:
         "200":
           description: Lista eliminata
@@ -860,7 +898,7 @@ paths:
       security:
       - autenticato: []
       x-swagger-router-controller: Liste
-  /liste/{id}/{indice}:
+  /lista/{id}/{indice}:
     delete:
       tags:
       - liste
@@ -875,8 +913,8 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
       - name: indice
         in: path
         description: L'indice dell'attività da rimuovere dalla lista
@@ -1026,8 +1064,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         email:
           type: string
@@ -1037,9 +1075,19 @@ components:
           enum:
           - autenticato
           - amministratore
+        promossoDa:
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
+          readOnly: true
+        immagine:
+          type: string
+          description: Il link all'immagine dell'utente
+          format: uri
       example:
         ruolo: autenticato
-        id: 0
+        promossoDa: promossoDa
+        id: id
+        immagine: http://example.com/aeiou
         email: ""
     Attivita:
       required:
@@ -1047,11 +1095,9 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          readOnly: true
-        descrizione:
+          pattern: "/^[a-f\\d]{24}$/i"
           type: string
+          readOnly: true
         banner:
           type: string
           description: Il link al banner dell'attività
@@ -1066,11 +1112,11 @@ components:
           type: string
           format: date-time
         autore:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         mediaValutazioni:
-          maximum: 5
+          maximum: 10
           minimum: 0
           type: number
           format: double
@@ -1080,10 +1126,9 @@ components:
           format: int64
       example:
         numeroSegnalazioni: 0
-        descrizione: descrizione
-        mediaValutazioni: 4.6507221219662877587097682408057153224945068359375
+        mediaValutazioni: 2.3021358869347654518833223846741020679473876953125
         banner: http://example.com/aeiou
-        id: 0
+        id: id
         collegamenti:
         - link: http://example.com/aeiou
           nome: nome
@@ -1103,17 +1148,20 @@ components:
             categoria: categoria
             nome: nome
           giocatoriPerSquadraSet: true
+          descrizione: descrizione
           titlo: titlo
           giocatoriPerSquadra: 0
           unitàDurata: minuti
           giocatori: null
           numeroSquadre: 0
           numeroSquadreSet: true
-        autore: 7
+        autore: autore
     Informazioni:
       type: object
       properties:
         titlo:
+          type: string
+        descrizione:
           type: string
         età:
           $ref: '#/components/schemas/Intervallo'
@@ -1157,6 +1205,7 @@ components:
           categoria: categoria
           nome: nome
         giocatoriPerSquadraSet: true
+        descrizione: descrizione
         titlo: titlo
         giocatoriPerSquadra: 0
         unitàDurata: minuti
@@ -1202,8 +1251,8 @@ components:
             type: string
             format: date-time
           autore:
-            type: integer
-            format: int64
+            pattern: "/^[a-f\\d]{24}$/i"
+            type: string
           mediaValutazioniMinima:
             maximum: 5
             minimum: 0
@@ -1231,33 +1280,33 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         nome:
           type: string
         autore:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         attività:
           type: array
           readOnly: true
           items:
-            type: integer
-            format: int64
+            pattern: "/^[a-f\\d]{24}$/i"
+            type: string
         utimaModifica:
           type: string
           format: date-time
           readOnly: true
       example:
         attività:
-        - 1
-        - 1
+        - attività
+        - attività
         nome: nome
-        id: 0
+        id: id
         utimaModifica: 2000-01-23T04:56:07.000+00:00
-        autore: 6
+        autore: autore
     Valutazione:
       required:
       - attività
@@ -1266,23 +1315,22 @@ components:
       type: object
       properties:
         voto:
-          multipleOf: 0.5
-          maximum: 5
-          minimum: 0
-          type: number
-          format: double
-        attività:
+          maximum: 10
+          minimum: 1
           type: integer
           format: int64
+        attività:
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         autore:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
       example:
-        attività: 6
-        voto: 0.400414095230505751032978878356516361236572265625
-        autore: 1
+        attività: attività
+        voto: 1
+        autore: autore
     Segnalazione:
       required:
       - messaggio
@@ -1294,18 +1342,18 @@ components:
         titolo:
           type: string
         attività:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
         autore:
-          type: integer
-          format: int64
+          pattern: "/^[a-f\\d]{24}$/i"
+          type: string
           readOnly: true
       example:
-        attività: 0
+        attività: attività
         titolo: titolo
         messaggio: messaggio
-        autore: 6
+        autore: autore
     Intervallo:
       type: object
       properties:

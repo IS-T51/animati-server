@@ -13,6 +13,16 @@ module.exports.getUtente = function getUtente (req, res, next) {
     });
 };
 
+module.exports.getUtenti = function getUtenti (req, res, next) {
+  Utente.getUtenti(req)
+  .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
 module.exports.login = function login (req, res, next) {
   Utente.login()
     .then(function (response) {

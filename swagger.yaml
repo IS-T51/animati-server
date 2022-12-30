@@ -8,7 +8,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.0.8
+  version: 0.1.1
 
 servers:
   - url: https://api.animati.app/
@@ -49,6 +49,42 @@ paths:
                 $ref: '#/components/schemas/Errore'
       security: 
         - autenticato: []
+  /utenti:
+    get:
+      tags:
+        - utente
+      summary: Ottieni gli utenti
+      description: Ottieni gli utenti iscritti all'applicativo
+      operationId: getUtenti
+      responses:
+        '200':
+          description: Lista di utenti
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Utente'
+        '401':
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '403':
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        '500':
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+      security:
+        - autenticato: []
   /utente/{id}:
     patch:
       tags:
@@ -62,8 +98,8 @@ paths:
           description: L'id dell'utente
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
         - name: ruolo
           in: query
           description: Il nuovo ruolo dell'utente
@@ -166,8 +202,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: L'attività con l'id specificato
@@ -199,8 +235,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       requestBody:
         description: L'attività modificata
         required: true
@@ -260,8 +296,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: Lista di valutazioni
@@ -309,8 +345,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       requestBody:
         description: La valutazione da aggiungere
         required: true
@@ -370,8 +406,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: Lista di segnalazioni
@@ -425,8 +461,8 @@ paths:
           description: L'id dell'attività
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       requestBody:
         description: La segnalazione da aggiungere
         required: true
@@ -659,7 +695,7 @@ paths:
                 $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
-  /liste/{id}:
+  /lista/{id}:
     get:
       tags:
         - liste
@@ -672,8 +708,8 @@ paths:
           description: L'id della lista
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: La lista con l'id specificato
@@ -719,8 +755,8 @@ paths:
           description: L'id della lista
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: Lista eliminata
@@ -766,15 +802,15 @@ paths:
           description: L'id della lista
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
         - name: attivita
           in: query
           description: L'id dell'attività da aggiungere alla lista
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
       responses:
         '200':
           description: Attività aggiunta alla lista
@@ -814,7 +850,7 @@ paths:
                 $ref: '#/components/schemas/Errore'
       security:
         - autenticato: []
-  /liste/{id}/{indice}:
+  /lista/{id}/{indice}:
     delete:
       tags:
         - liste
@@ -827,8 +863,8 @@ paths:
           description: L'id della lista
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
         - name: indice
           in: path
           description: L'indice dell'attività da rimuovere dalla lista
@@ -970,8 +1006,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         email:
           type: string
@@ -981,6 +1017,14 @@ components:
           enum:
             - autenticato
             - amministratore
+        promossoDa:
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
+          readOnly: true
+        immagine:
+          type: string
+          format: uri
+          description: Il link all'immagine dell'utente
       required:
         - id
         - email
@@ -990,11 +1034,9 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          readOnly: true
-        descrizione:
           type: string
+          pattern: "/^[a-f\\d]{24}$/i"
+          readOnly: true
         banner:
           type: string
           format: uri
@@ -1009,14 +1051,14 @@ components:
           type: string
           format: date-time
         autore:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         mediaValutazioni:
           type: number
           format: double
           minimum: 0
-          maximum: 5
+          maximum: 10
         numeroSegnalazioni:
           type: integer
           format: int64
@@ -1028,6 +1070,8 @@ components:
       type: object
       properties:
         titlo:
+          type: string
+        descrizione:
           type: string
         età:
           $ref: '#/components/schemas/Intervallo'
@@ -1093,8 +1137,8 @@ components:
               type: string
               format: date-time
             autore:
-              type: integer
-              format: int64
+              type: string
+              pattern: "/^[a-f\\d]{24}$/i"
             mediaValutazioniMinima:
               type: number
               format: double
@@ -1119,20 +1163,20 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         nome:
           type: string
         autore:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         attività:
           type: array
           items:
-            type: integer
-            format: int64
+            type: string
+            pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         utimaModifica:
           type: string
@@ -1147,18 +1191,17 @@ components:
       type: object
       properties:
         voto:
-          type: number
-          format: double
-          minimum: 0
-          maximum: 5
-          multipleOf: 0.5
-        attività:
           type: integer
           format: int64
+          minimum: 1
+          maximum: 10
+        attività:
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         autore:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
       required:
         - voto
@@ -1173,12 +1216,12 @@ components:
         titolo:
           type: string
         attività:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         autore:
-          type: integer
-          format: int64
+          type: string
+          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
       required:
         - messaggio
