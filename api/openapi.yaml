@@ -9,8 +9,6 @@ info:
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
   version: 0.2.0
 servers:
-- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.2.0
-  description: SwaggerHub API Auto Mocking
 - url: https://api.animati.app/
 - url: http://localhost:8080/
 tags:
