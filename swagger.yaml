@@ -7,10 +7,8 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.2.0
+  version: 0.2.1
 servers:
-- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.2.0
-  description: SwaggerHub API Auto Mocking
 - url: https://api.animati.app/
 - url: http://localhost:8080/
 tags:
@@ -166,9 +164,15 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/Risposta'
+        "500":
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Utente
-  /google/{codiceAutorizzativo}:
+  /google:
     get:
       tags:
       - utente
@@ -176,12 +180,10 @@ paths:
       description: Verifica il codice autorizzativo fornito da Google e crea un utente
       operationId: loginGoogle
       parameters:
-      - name: codiceAutorizzativo
-        in: path
+      - name: code
+        in: query
         description: Il codice autorizzativo fornito da Google
         required: true
-        style: simple
-        explode: false
         schema:
           type: string
       responses:
@@ -190,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Utente'
+                $ref: '#/components/schemas/Token'
         "400":
           description: Richiesta non valida
           content:
@@ -1451,12 +1453,23 @@ components:
           - 200
           - 201
           - 204
+          - 302
         messaggio:
           type: string
           readOnly: true
       example:
-        messaggio: messaggio
-        codice: 0
+        messaggio: ok
+        codice: 200
+    Token:
+      allOf:
+      - $ref: '#/components/schemas/Risposta'
+      - type: object
+        properties:
+          token:
+            type: string
+            readOnly: true
+            example:
+              token: token
   securitySchemes:
     autenticato:
       type: http

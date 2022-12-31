@@ -26,7 +26,7 @@ module.exports.getUtenti = function getUtenti (req, res, next) {
 module.exports.login = function login (req, res, next) {
   Utente.login()
     .then(function (response) {
-      utils.writeJson(res, response);
+      res.redirect(response);
     })
     .catch(function (response) {
       utils.writeJson(res, response);
