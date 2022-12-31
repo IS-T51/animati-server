@@ -263,7 +263,7 @@ exports.loginGoogle = function (code) {
       resolve({
         "messaggio": "Login effettuato",
         "codice": 200,
-        "token": jwt.sign({_id: utente._id}, 
+        "token": jwt.sign(utente, 
           process.env.JWT_SECRET_KEY, {
             expiresIn: 86400 // 24 ore
           }
