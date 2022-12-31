@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 const EtichetteSchema = require('./Etichetta');
-const IntervalloSchema = require('./Intervallo');
 
 const InformazioniSchema = new mongoose.Schema({
     titolo: String,
     descrizione: String,
-    'età': IntervalloSchema,
-    'unitàDurata': String,
-    durataMedia: Number,
-    giocatori: IntervalloSchema,
+    'etàMin': Number,
+    'etàMax': Number,
+    durataMin: Number,
+    durataMax: Number,
+    giocatoriMin: Number,
+    giocatoriMax: Number,
     giocatoriPerSquadra: Number,
     giocatoriPerSquadraSet: Boolean,
     numeroSquadre: Number,

@@ -14,16 +14,16 @@ const UtenteService = require('./UtenteService');
 exports.aggiungiEtichetta = function(req, body) {
   return new Promise(async function(resolve, reject) {
     // Verifico che sia amministratore
-    UtenteService.getUtente(req).then(async function(response) {
-      // Se non è amministratore, restituisci 403
-      if(response.ruolo != "amministratore") {
-        return reject(utils.respondWithCode(403, {
-          "messaggio" : "Non sei autorizzato a fare questa richiesta",
-          "codice" : 403
-        }));
-      }
-
+    UtenteService.getUtente(req).then(async function(io) {
       try {
+        // Se non è amministratore, restituisci 403
+        if(io.ruolo != "amministratore") {
+          return reject(utils.respondWithCode(403, {
+            "messaggio" : "Non sei autorizzato a fare questa richiesta",
+            "codice" : 403
+          }));
+        }
+        
         // Aggiorna o inserisci l'etichetta
         var etichetta = await Etichetta.findOneAndUpdate(
           {nome: body.nome},
@@ -32,12 +32,12 @@ exports.aggiungiEtichetta = function(req, body) {
         ).exec();
         // Se c'è già, restituisci 200, altrimenti 201
         if(etichetta) {
-          resolve({
+          return resolve({
             "messaggio" : "Etichetta aggiornata",
             "codice" : 200
           });
         } else {
-          resolve(utils.respondWithCode(201, {
+          return resolve(utils.respondWithCode(201, {
             "messaggio" : "Etichetta aggiunta",
             "codice" : 201
           }));
@@ -66,7 +66,7 @@ exports.aggiungiEtichetta = function(req, body) {
 exports.ottieniEtichette = function() {
   return new Promise(async function(resolve, reject) {
     try {
-      // Aggiorna o inserisci l'etichetta
+      // Trova tutte le etichette
       var etichette = await Etichetta.find().exec();
       // Se ce ne sono, restituisci 200, altrimenti 204
       if(etichette) {

@@ -43,8 +43,8 @@ module.exports.loginGoogle = function loginGoogle (req, res, next, codiceAutoriz
     });
 };
 
-module.exports.modificaRuolo = function modificaRuolo (req, res, next, id, ruolo) {
-  Utente.modificaRuolo(id, ruolo)
+module.exports.modificaRuolo = function modificaRuolo (req, res, next, ruolo, id) {
+  Utente.modificaRuolo(req, ruolo, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })

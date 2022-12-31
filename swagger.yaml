@@ -1,63 +1,62 @@
 openapi: 3.0.3
 info:
   title: Animati - OpenAPI 3.0
-  description: |-
-    ciao
+  description: ciao
   contact:
     email: assistenza@animati.app
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.1.1
-
+  version: 0.2.0
 servers:
-  - url: https://api.animati.app/
-  - url: http://localhost:8080/
-  
+- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.2.0
+  description: SwaggerHub API Auto Mocking
+- url: https://api.animati.app/
+- url: http://localhost:8080/
 tags:
-  - name: utente
-  - name: attivita
-  - name: liste
-  - name: etichette
-
+- name: utente
+- name: attivita
+- name: liste
+- name: etichette
 paths:
   /utente:
     get:
       tags:
-        - utente
+      - utente
       summary: Ottieni l'utente
       description: Ottieni l'utente associato alla sessione corrente
       operationId: getUtente
       responses:
-        '200':
+        "200":
           description: L'utente associato alla sessione corrente
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Utente'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-      security: 
-        - autenticato: []
+      security:
+      - autenticato: []
+      x-swagger-router-controller: Utente
   /utenti:
     get:
       tags:
-        - utente
+      - utente
       summary: Ottieni gli utenti
       description: Ottieni gli utenti iscritti all'applicativo
       operationId: getUtenti
       responses:
-        '200':
+        "200":
           description: Lista di utenti
           content:
             application/json:
@@ -65,351 +64,379 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Utente'
-        '401':
+                x-content-type: application/json
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Utente
   /utente/{id}:
     patch:
       tags:
-        - utente
+      - utente
       summary: Modifica il ruolo
       description: Modifica il ruolo dell'utente con l'id specificato
       operationId: modificaRuolo
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'utente
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
-        - name: ruolo
-          in: query
-          description: Il nuovo ruolo dell'utente
-          required: true
-          schema:
-            type: string
-            enum:
-              - autenticato
-              - amministratore
+      - name: id
+        in: path
+        description: L'id dell'utente
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      - name: ruolo
+        in: query
+        description: Il nuovo ruolo dell'utente
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - autenticato
+          - amministratore
       responses:
-        '200':
+        "200":
           description: Ruolo modificato
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "404":
+          description: Utente non trovato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Utente
   /utente/login:
     get:
       tags:
-        - utente
+      - utente
       summary: Effettua il login
       operationId: login
       responses:
-        '302':
+        "302":
           description: Redirect alla pagina di login
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
+      x-swagger-router-controller: Utente
   /google/{codiceAutorizzativo}:
     get:
       tags:
-        - utente
+      - utente
       summary: Login con Google
       description: Verifica il codice autorizzativo fornito da Google e crea un utente
       operationId: loginGoogle
       parameters:
-        - name: codiceAutorizzativo
-          in: path
-          description: Il codice autorizzativo fornito da Google
-          required: true
-          schema:
-            type: string
+      - name: codiceAutorizzativo
+        in: path
+        description: Il codice autorizzativo fornito da Google
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
       responses:
-        '200':
+        "200":
           description: Login effettuato
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Utente'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-  
+      x-swagger-router-controller: Utente
   /attivita/{id}:
     get:
       tags:
-        - attivita
+      - attivita
       summary: Ottieni l'attività
       description: Ottieni l'attività con l'id specificato
       operationId: getAttivita
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       responses:
-        '200':
+        "200":
           description: L'attività con l'id specificato
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Attivita'
-        '404':
+        "404":
           description: L'attività non esiste
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
+      x-swagger-router-controller: Attivita
     put:
       tags:
-        - attivita
+      - attivita
       summary: Modifica l'attività
       description: Modifica l'attività con l'id specificato
       operationId: modificaAttivita
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       requestBody:
         description: L'attività modificata
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Attivita'
+        required: true
       responses:
-        '200':
+        "200":
           description: Attività modificata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: L'attività non esiste
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
   /attivita/{id}/valutazione:
     get:
       tags:
-        - attivita
+      - attivita
       summary: Ottieni valutazione di un'attività
       description: Ottiene la valutazione dell'utente di un'attività
       operationId: ottieniValutazione
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       responses:
-        '200':
+        "200":
           description: Lista di valutazioni
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Valutazione'
-        '204':
+                $ref: '#/components/schemas/Valutazione'
+        "204":
           description: Nessuna valutazione trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
     post:
       tags:
-        - attivita
+      - attivita
       summary: Aggiungi valutazione
       description: Aggiunge la valutazione all'attività
       operationId: aggiungiValutazione
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       requestBody:
         description: La valutazione da aggiungere
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Valutazione'
+        required: true
       responses:
-        '200':
+        "200":
           description: Valutazione aggiornata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '201':
+        "201":
           description: Valutazione aggiunta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
   /attivita/{id}/segnalazioni:
     get:
       tags:
-        - attivita
+      - attivita
       summary: Ottieni segnalazioni di un'attività
       description: Ottiene tutte le segnalazioni in un'attività
       operationId: ottieniSegnalazioni
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       responses:
-        '200':
+        "200":
           description: Lista di segnalazioni
           content:
             application/json:
@@ -417,114 +444,210 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Segnalazione'
-        '204':
+                x-content-type: application/json
+        "204":
           description: Nessuna segnalazione trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
     post:
       tags:
-        - attivita
+      - attivita
       summary: Aggiungi segnalazione
       description: Aggiunge una segnalazione all'attività
       operationId: aggiungiSegnalazione
       parameters:
-        - name: id
-          in: path
-          description: L'id dell'attività
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id dell'attività
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       requestBody:
         description: La segnalazione da aggiungere
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Segnalazione'
+        required: true
       responses:
-        '200':
+        "200":
           description: Segnalazione aggiornata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '201':
+        "201":
           description: Segnalazione aggiunta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Attività non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
   /catalogo:
     get:
       tags:
-        - attivita
+      - attivita
       summary: Ottieni il catalogo
       description: Ottieni il catalogo
       operationId: getCatalogo
       parameters:
-        - name: filtro
-          in: query
-          description: Il filtro da applicare al catalogo
-          required: false
-          schema:
-            $ref: '#/components/schemas/Filtro'
+      - name: informazioni
+        in: query
+        description: Filtra le attività per informazioni
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/Informazioni'
+      - name: autore
+        in: query
+        description: Filtra le attività per autore
+        required: false
+        style: form
+        explode: true
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      - name: ultimaModificaMin
+        in: query
+        description: Filtra le attività per ultima modifica minima
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: ultimaModificaMax
+        in: query
+        description: Filtra le attività per ultima modifica massima
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: mediaValutazioniMin
+        in: query
+        description: Filtra le attività per media valutazioni minima
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 10
+          minimum: 1
+          type: number
+          format: double
+      - name: mediaValutazioniMax
+        in: query
+        description: Filtra le attività per media valutazioni massima
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 10
+          minimum: 1
+          type: number
+          format: float
+      - name: numeroSegnalazioniMin
+        in: query
+        description: Filtra le attività per numero segnalazioni minimo
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: numeroSegnalazioniMax
+        in: query
+        description: Filtra le attività per numero segnalazioni massimo
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: pagina
+        in: query
+        description: Pagina da visualizzare
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: limite
+        in: query
+        description: Numero di attività per pagina
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
       responses:
-        '200':
+        "200":
           description: Il catalogo
           content:
             application/json:
@@ -532,81 +655,86 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Attivita'
-        '204':
+                x-content-type: application/json
+        "204":
           description: Nessuna attività presente nel catalogo
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
+      x-swagger-router-controller: Attivita
     post:
       tags:
-        - attivita
+      - attivita
       summary: Aggiungi l'attività
       description: Aggiungi l'attività al catalogo
       operationId: aggiungiAttivita
       requestBody:
         description: L'attività da aggiungere
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Attivita'
+        required: true
       responses:
-        '200':
+        "200":
           description: Attività aggiunta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Attivita'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Attivita
   /catalogo/aggiorna:
     get:
       tags:
-        - attivita
+      - attivita
       summary: Aggiorna il catalogo
       description: Restituisce le attività aggiornate dopo la data specificata
       operationId: aggiornaCatalogo
       parameters:
-        - name: data
-          in: query
-          description: La data dopo la quale cercare le attività aggiornate
-          required: true
-          schema:
-            type: string
-            format: date-time
+      - name: data
+        in: query
+        description: La data dopo la quale cercare le attività aggiornate
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
       responses:
-        '200':
+        "200":
           description: Catalogo aggiornato
           content:
             application/json:
@@ -614,313 +742,331 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Attivita'
-        '400':
+                x-content-type: application/json
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-
+      x-swagger-router-controller: Attivita
   /liste:
     get:
       tags:
-        - liste
+      - liste
       summary: Ottieni le liste
       description: Ottieni le liste dell'utente
       operationId: getListe
       responses:
-        '200':
+        "200":
           description: Le liste dell'utente
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Liste
     post:
       tags:
-        - liste
+      - liste
       summary: Crea lista
       description: Crea una nuova lista
       operationId: aggiungiLista
       requestBody:
         description: La lista da aggiungere
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Lista'
+        required: true
       responses:
-        '200':
+        "200":
           description: Lista aggiunta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Liste
   /lista/{id}:
     get:
       tags:
-        - liste
+      - liste
       summary: Ottieni la lista
       description: Ottieni la lista con l'id specificato
       operationId: getLista
       parameters:
-        - name: id
-          in: path
-          description: L'id della lista
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id della lista
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       responses:
-        '200':
+        "200":
           description: La lista con l'id specificato
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
-    delete:
-      tags:
-        - liste
-      summary: Elimina lista
-      description: Elimina la lista con l'id specificato
-      operationId: eliminaLista
-      parameters:
-        - name: id
-          in: path
-          description: L'id della lista
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
-      responses:
-        '200':
-          description: Lista eliminata
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
-        '401':
-          description: Autenticazione necessaria per fare questa richiesta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errore'
-        '403':
-          description: Non sei autorizzato a fare questa richiesta
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errore'
-        '404':
-          description: Lista non trovata
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errore'
-        '500':
-          description: Errore interno del server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errore'
-      security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Liste
     post:
       tags:
-        - liste
+      - liste
       summary: Aggiunge attività alla lista
       description: Aggiunge l'attività specificata alla lista
       operationId: aggiungiAttivitaALista
       parameters:
-        - name: id
-          in: path
-          description: L'id della lista
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
-        - name: attivita
-          in: query
-          description: L'id dell'attività da aggiungere alla lista
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
+      - name: id
+        in: path
+        description: L'id della lista
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      - name: attivita
+        in: query
+        description: L'id dell'attività da aggiungere alla lista
+        required: true
+        style: form
+        explode: true
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
       responses:
-        '200':
+        "200":
           description: Attività aggiunta alla lista
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
+      - autenticato: []
+      x-swagger-router-controller: Liste
+    delete:
+      tags:
+      - liste
+      summary: Elimina lista
+      description: Elimina la lista con l'id specificato
+      operationId: eliminaLista
+      parameters:
+      - name: id
+        in: path
+        description: L'id della lista
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      responses:
+        "200":
+          description: Lista eliminata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        "401":
+          description: Autenticazione necessaria per fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "403":
+          description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "404":
+          description: Lista non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "500":
+          description: Errore interno del server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+      security:
+      - autenticato: []
+      x-swagger-router-controller: Liste
   /lista/{id}/{indice}:
     delete:
       tags:
-        - liste
+      - liste
       summary: Rimuovi attività dalla lista
       description: Rimuove l'attività all'indice specificato dalla lista
       operationId: rimuoviAttivitaDaLista
       parameters:
-        - name: id
-          in: path
-          description: L'id della lista
-          required: true
-          schema:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
-        - name: indice
-          in: path
-          description: L'indice dell'attività da rimuovere dalla lista
-          required: true
-          schema:
-            type: integer
-            format: int64
+      - name: id
+        in: path
+        description: L'id della lista
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      - name: indice
+        in: path
+        description: L'indice dell'attività da rimuovere dalla lista
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
+        "200":
           description: Attività rimossa dalla lista
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '404':
+        "404":
           description: Lista non trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
-
+      - autenticato: []
+      x-swagger-router-controller: Liste
   /etichette:
     get:
       tags:
-        - etichette
+      - etichette
       summary: Ottieni tutte le etichette
       description: Ottiene tutte le etichette
       operationId: ottieniEtichette
       responses:
-        '200':
+        "200":
           description: Lista di etichette
           content:
             application/json:
@@ -928,86 +1074,92 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Etichetta'
-        '204':
+                x-content-type: application/json
+        "204":
           description: Nessuna etichetta trovata
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
+      x-swagger-router-controller: Etichette
     post:
       tags:
-        - etichette
+      - etichette
       summary: Aggiungi etichetta
       description: Aggiunge l'etichetta specificata
       operationId: aggiungiEtichetta
       requestBody:
         description: L'etichetta da aggiungere
-        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Etichetta'
+        required: true
       responses:
-        '200':
+        "200":
           description: Etichetta aggiunta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Etichetta'
-        '400':
+        "400":
           description: Richiesta non valida
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '401':
+        "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '403':
+        "403":
           description: Non sei autorizzato a fare questa richiesta
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
-        '500':
+        "500":
           description: Errore interno del server
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errore'
       security:
-        - autenticato: []
-  
-  
+      - autenticato: []
+      x-swagger-router-controller: Etichette
   /ping:
     get:
       summary: Ping
       description: Ping
       operationId: ping
       responses:
-        '200':
+        "200":
           description: Pong
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+      x-swagger-router-controller: Default
 components:
   schemas:
     Utente:
+      required:
+      - email
+      - id
+      - ruolo
       type: object
       properties:
         id:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         email:
           type: string
@@ -1015,95 +1167,145 @@ components:
         ruolo:
           type: string
           enum:
-            - autenticato
-            - amministratore
+          - autenticato
+          - amministratore
         promossoDa:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         immagine:
           type: string
-          format: uri
           description: Il link all'immagine dell'utente
-      required:
-        - id
-        - email
-        - ruolo
-    
+          format: uri
+      example:
+        ruolo: autenticato
+        promossoDa: promossoDa
+        id: id
+        immagine: http://example.com/aeiou
+        email: ""
     Attivita:
+      required:
+      - id
       type: object
       properties:
         id:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         banner:
           type: string
-          format: uri
           description: Il link al banner dell'attività
+          format: uri
         informazioni:
           $ref: '#/components/schemas/Informazioni'
         collegamenti:
           type: array
           items:
             $ref: '#/components/schemas/Collegamento'
-        utimaModifica:
+        ultimaModifica:
           type: string
           format: date-time
         autore:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         mediaValutazioni:
+          maximum: 10
+          minimum: 0
           type: number
           format: double
-          minimum: 0
-          maximum: 10
         numeroSegnalazioni:
+          minimum: 0
           type: integer
           format: int64
-          minimum: 0
-      required:
-        - id
-    
+      example:
+        numeroSegnalazioni: 0
+        ultimaModifica: 2000-01-23T04:56:07.000+00:00
+        mediaValutazioni: 3.61607674925191080461672754609026014804840087890625
+        banner: http://example.com/aeiou
+        id: id
+        collegamenti:
+        - link: http://example.com/aeiou
+          nome: nome
+        - link: http://example.com/aeiou
+          nome: nome
+        informazioni:
+          etàMax: 0
+          etichette:
+          - etichette
+          - etichette
+          descrizione: descrizione
+          etàMin: 0
+          durataMin: 0
+          titolo: titolo
+          durataMax: 0
+          giocatoriPerSquadra: 0
+          numeroSquadre: 0
+          giocatoriMax: 0
+          giocatoriMin: 0
+        autore: autore
     Informazioni:
       type: object
       properties:
-        titlo:
+        titolo:
           type: string
         descrizione:
           type: string
-        età:
-          $ref: '#/components/schemas/Intervallo'
-        unitàDurata:
-          type: string
-          enum:
-            - minuti
-            - ore
-        durataMedia:
+        etàMin:
+          minimum: 0
           type: integer
           format: int64
+        etàMax:
           minimum: 0
-        giocatori:
-          $ref: '#/components/schemas/Intervallo'
+          type: integer
+          format: int64
+        durataMin:
+          minimum: 0
+          type: integer
+          format: int64
+        durataMax:
+          minimum: 0
+          type: integer
+          format: int64
+        giocatoriMin:
+          minimum: 0
+          type: integer
+          format: int64
+        giocatoriMax:
+          minimum: 0
+          type: integer
+          format: int64
         giocatoriPerSquadra:
+          minimum: 0
           type: integer
           format: int64
-          minimum: 0
-        giocatoriPerSquadraSet:
-          type: boolean
         numeroSquadre:
+          minimum: 0
           type: integer
           format: int64
-          minimum: 0
-        numeroSquadreSet:
-          type: boolean
         etichette:
           type: array
           items:
-            $ref: '#/components/schemas/Etichetta'
-    
+            type: string
+      example:
+        etàMax: 0
+        etichette:
+        - etichette
+        - etichette
+        descrizione: descrizione
+        etàMin: 0
+        durataMin: 0
+        titolo: titolo
+        durataMax: 0
+        giocatoriPerSquadra: 0
+        numeroSquadre: 0
+        giocatoriMax: 0
+        giocatoriMin: 0
     Etichetta:
+      required:
+      - categoria
+      - descrizione
+      - nome
       type: object
       properties:
         nome:
@@ -1112,12 +1314,14 @@ components:
           type: string
         categoria:
           type: string
-      required:
-        - nome
-        - categoria
-        - descrizione
-
+      example:
+        descrizione: descrizione
+        categoria: categoria
+        nome: nome
     Collegamento:
+      required:
+      - link
+      - nome
       type: object
       properties:
         nome:
@@ -1125,90 +1329,72 @@ components:
         link:
           type: string
           format: uri
-      required:
-        - nome
-        - link
-
-    Filtro:
-      allOf:
-        - type: object
-          properties:
-            ultimaModifica:
-              type: string
-              format: date-time
-            autore:
-              type: string
-              pattern: "/^[a-f\\d]{24}$/i"
-            mediaValutazioniMinima:
-              type: number
-              format: double
-              minimum: 0
-              maximum: 5
-            numeroSegnalazioniMinimo:
-              type: integer
-              format: int64
-              minimum: 0
-            pagina:
-              type: integer
-              format: int64
-              minimum: 0
-            limite:
-              type: integer
-              format: int64
-              minimum: 0
-              maximum: 100
-        - $ref: '#/components/schemas/Informazioni'
-   
+      example:
+        link: http://example.com/aeiou
+        nome: nome
     Lista:
+      required:
+      - attività
+      - id
+      - nome
       type: object
       properties:
         id:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         nome:
           type: string
         autore:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         attività:
           type: array
-          items:
-            type: string
-            pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
-        utimaModifica:
+          items:
+            pattern: "^[a-f\\d]{24}$"
+            type: string
+        ultimaModifica:
           type: string
           format: date-time
           readOnly: true
-      required:
-        - id
-        - nome
+      example:
+        attività:
         - attività
-    
+        - attività
+        ultimaModifica: 2000-01-23T04:56:07.000+00:00
+        nome: nome
+        id: id
+        autore: autore
     Valutazione:
+      required:
+      - attività
+      - autore
+      - voto
       type: object
       properties:
         voto:
+          maximum: 10
+          minimum: 1
           type: integer
           format: int64
-          minimum: 1
-          maximum: 10
         attività:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         autore:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
-      required:
-        - voto
-        - attività
-        - autore
-    
+      example:
+        attività: attività
+        voto: 1
+        autore: autore
     Segnalazione:
+      required:
+      - messaggio
+      - titolo
       type: object
       properties:
         messaggio:
@@ -1216,70 +1402,61 @@ components:
         titolo:
           type: string
         attività:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
         autore:
+          pattern: "^[a-f\\d]{24}$"
           type: string
-          pattern: "/^[a-f\\d]{24}$/i"
           readOnly: true
-      required:
-        - messaggio
-        - titolo
-    
-    Intervallo:
-      type: object
-      properties:
-        da:
-          type: integer
-          format: int64
-          minimum: 0
-        a:
-          type: integer
-          format: int64
-          minimum: 0
-
+      example:
+        attività: attività
+        titolo: titolo
+        messaggio: messaggio
+        autore: autore
     Errore:
+      required:
+      - code
+      - messaggio
       type: object
       properties:
         code:
           type: integer
           format: int64
-          enum:
-            - 401
-            - 403
-            - 404
-            - 500
           readOnly: true
+          enum:
+          - 401
+          - 403
+          - 404
+          - 500
           default: 401
         messaggio:
           type: string
-          default: Autenticazione necessaria per fare questa richiesta
           readOnly: true
+          default: Autenticazione necessaria per fare questa richiesta
         errore:
           type: object
           readOnly: true
-      required:
-        - code
-        - messaggio
     Risposta:
+      required:
+      - codice
+      - messaggio
       type: object
       properties:
         codice:
           type: integer
           format: int64
-          enum:
-            - 200
-            - 201
-            - 204
           readOnly: true
+          enum:
+          - 200
+          - 201
+          - 204
         messaggio:
           type: string
-          default: 
           readOnly: true
-      required:
-        - codice
-        - messaggio
+      example:
+        messaggio: messaggio
+        codice: 0
   securitySchemes:
     autenticato:
       type: http

@@ -7,17 +7,20 @@ UserSchema = new mongoose.Schema({
     },
     ruolo: {
         type: String,
-        required: true
+        default: 'autenticato'
     },
     promossoDa: {
-        type: mongoose.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Utenti',
+        default: mongoose.Types.ObjectId('000000000000000000000000')
     },
     immagine: {
-        type: String
+        type: String,
+        default: 'https://animati.app/assets/img/logo512.png'
     }
 });
 
 UserSchema.index({email: 1}, {unique: true});
+UserSchema.index({promossoDa: 1});
 
 module.exports = UserSchema;

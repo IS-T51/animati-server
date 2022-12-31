@@ -10,12 +10,12 @@ const SegnalazioneSchema = new mongoose.Schema({
         required: true
     },
     'attività': {
-        type: mongoose.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Catalogo',
         required: true
     },
     autore: {
-        type: mongoose.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: 'Utenti',
         required: true
     }

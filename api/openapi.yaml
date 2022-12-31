@@ -7,8 +7,10 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.1.1
+  version: 0.2.0
 servers:
+- url: https://virtserver.swaggerhub.com/BISUMTO_1/Animati/0.2.0
+  description: SwaggerHub API Auto Mocking
 - url: https://api.animati.app/
 - url: http://localhost:8080/
 tags:
@@ -99,7 +101,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       - name: ruolo
         in: query
@@ -133,6 +135,12 @@ paths:
                 $ref: '#/components/schemas/Errore'
         "403":
           description: Non sei autorizzato a fare questa richiesta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
+        "404":
+          description: Utente non trovato
           content:
             application/json:
               schema:
@@ -211,7 +219,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -247,7 +255,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       requestBody:
         description: L'attività modificata
@@ -311,7 +319,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -319,10 +327,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Valutazione'
-                x-content-type: application/json
+                $ref: '#/components/schemas/Valutazione'
         "204":
           description: Nessuna valutazione trovata
           content:
@@ -364,7 +369,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       requestBody:
         description: La valutazione da aggiungere
@@ -428,7 +433,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -487,7 +492,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       requestBody:
         description: La segnalazione da aggiungere
@@ -544,14 +549,103 @@ paths:
       description: Ottieni il catalogo
       operationId: getCatalogo
       parameters:
-      - name: filtro
+      - name: informazioni
         in: query
-        description: Il filtro da applicare al catalogo
+        description: Filtra le attività per informazioni
         required: false
         style: form
         explode: true
         schema:
-          $ref: '#/components/schemas/Filtro'
+          $ref: '#/components/schemas/Informazioni'
+      - name: autore
+        in: query
+        description: Filtra le attività per autore
+        required: false
+        style: form
+        explode: true
+        schema:
+          pattern: "^[a-f\\d]{24}$"
+          type: string
+      - name: ultimaModificaMin
+        in: query
+        description: Filtra le attività per ultima modifica minima
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: ultimaModificaMax
+        in: query
+        description: Filtra le attività per ultima modifica massima
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date-time
+      - name: mediaValutazioniMin
+        in: query
+        description: Filtra le attività per media valutazioni minima
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 10
+          minimum: 1
+          type: number
+          format: double
+      - name: mediaValutazioniMax
+        in: query
+        description: Filtra le attività per media valutazioni massima
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 10
+          minimum: 1
+          type: number
+          format: float
+      - name: numeroSegnalazioniMin
+        in: query
+        description: Filtra le attività per numero segnalazioni minimo
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: numeroSegnalazioniMax
+        in: query
+        description: Filtra le attività per numero segnalazioni massimo
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: pagina
+        in: query
+        description: Pagina da visualizzare
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
+      - name: limite
+        in: query
+        description: Numero di attività per pagina
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+          format: int64
       responses:
         "200":
           description: Il catalogo
@@ -747,7 +841,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -797,7 +891,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       - name: attivita
         in: query
@@ -806,7 +900,7 @@ paths:
         style: form
         explode: true
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -862,7 +956,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
         "200":
@@ -913,7 +1007,7 @@ paths:
         style: simple
         explode: false
         schema:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
       - name: indice
         in: path
@@ -1064,7 +1158,7 @@ components:
       type: object
       properties:
         id:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         email:
@@ -1076,7 +1170,7 @@ components:
           - autenticato
           - amministratore
         promossoDa:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         immagine:
@@ -1095,7 +1189,7 @@ components:
       type: object
       properties:
         id:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         banner:
@@ -1108,11 +1202,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Collegamento'
-        utimaModifica:
+        ultimaModifica:
           type: string
           format: date-time
         autore:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         mediaValutazioni:
@@ -1126,7 +1220,8 @@ components:
           format: int64
       example:
         numeroSegnalazioni: 0
-        mediaValutazioni: 2.3021358869347654518833223846741020679473876953125
+        ultimaModifica: 2000-01-23T04:56:07.000+00:00
+        mediaValutazioni: 3.61607674925191080461672754609026014804840087890625
         banner: http://example.com/aeiou
         id: id
         collegamenti:
@@ -1134,84 +1229,78 @@ components:
           nome: nome
         - link: http://example.com/aeiou
           nome: nome
-        utimaModifica: 2000-01-23T04:56:07.000+00:00
         informazioni:
-          età:
-            a: 0
-            da: 0
-          durataMedia: 0
+          etàMax: 0
           etichette:
-          - descrizione: descrizione
-            categoria: categoria
-            nome: nome
-          - descrizione: descrizione
-            categoria: categoria
-            nome: nome
-          giocatoriPerSquadraSet: true
+          - etichette
+          - etichette
           descrizione: descrizione
-          titlo: titlo
+          etàMin: 0
+          durataMin: 0
+          titolo: titolo
+          durataMax: 0
           giocatoriPerSquadra: 0
-          unitàDurata: minuti
-          giocatori: null
           numeroSquadre: 0
-          numeroSquadreSet: true
+          giocatoriMax: 0
+          giocatoriMin: 0
         autore: autore
     Informazioni:
       type: object
       properties:
-        titlo:
+        titolo:
           type: string
         descrizione:
           type: string
-        età:
-          $ref: '#/components/schemas/Intervallo'
-        unitàDurata:
-          type: string
-          enum:
-          - minuti
-          - ore
-        durataMedia:
+        etàMin:
           minimum: 0
           type: integer
           format: int64
-        giocatori:
-          $ref: '#/components/schemas/Intervallo'
+        etàMax:
+          minimum: 0
+          type: integer
+          format: int64
+        durataMin:
+          minimum: 0
+          type: integer
+          format: int64
+        durataMax:
+          minimum: 0
+          type: integer
+          format: int64
+        giocatoriMin:
+          minimum: 0
+          type: integer
+          format: int64
+        giocatoriMax:
+          minimum: 0
+          type: integer
+          format: int64
         giocatoriPerSquadra:
           minimum: 0
           type: integer
           format: int64
-        giocatoriPerSquadraSet:
-          type: boolean
         numeroSquadre:
           minimum: 0
           type: integer
           format: int64
-        numeroSquadreSet:
-          type: boolean
         etichette:
           type: array
           items:
-            $ref: '#/components/schemas/Etichetta'
+            type: string
       example:
-        età:
-          a: 0
-          da: 0
-        durataMedia: 0
+        etàMax: 0
         etichette:
-        - descrizione: descrizione
-          categoria: categoria
-          nome: nome
-        - descrizione: descrizione
-          categoria: categoria
-          nome: nome
-        giocatoriPerSquadraSet: true
+        - etichette
+        - etichette
         descrizione: descrizione
-        titlo: titlo
+        etàMin: 0
+        durataMin: 0
+        titolo: titolo
+        durataMax: 0
         giocatoriPerSquadra: 0
-        unitàDurata: minuti
-        giocatori: null
         numeroSquadre: 0
-        numeroSquadreSet: true
+        giocatoriMax: 0
+        giocatoriMin: 0
     Etichetta:
       required:
       - categoria
@@ -1243,35 +1332,6 @@ components:
       example:
         link: http://example.com/aeiou
         nome: nome
-    Filtro:
-      allOf:
-      - type: object
-        properties:
-          ultimaModifica:
-            type: string
-            format: date-time
-          autore:
-            pattern: "/^[a-f\\d]{24}$/i"
-            type: string
-          mediaValutazioniMinima:
-            maximum: 5
-            minimum: 0
-            type: number
-            format: double
-          numeroSegnalazioniMinimo:
-            minimum: 0
-            type: integer
-            format: int64
-          pagina:
-            minimum: 0
-            type: integer
-            format: int64
-          limite:
-            maximum: 100
-            minimum: 0
-            type: integer
-            format: int64
-      - $ref: '#/components/schemas/Informazioni'
     Lista:
       required:
       - attività
@@ -1280,22 +1340,22 @@ components:
       type: object
       properties:
         id:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         nome:
           type: string
         autore:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         attività:
           type: array
           readOnly: true
           items:
-            pattern: "/^[a-f\\d]{24}$/i"
+            pattern: "^[a-f\\d]{24}$"
             type: string
-        utimaModifica:
+        ultimaModifica:
           type: string
           format: date-time
           readOnly: true
@@ -1303,9 +1363,9 @@ components:
         attività:
         - attività
         - attività
+        ultimaModifica: 2000-01-23T04:56:07.000+00:00
         nome: nome
         id: id
-        utimaModifica: 2000-01-23T04:56:07.000+00:00
         autore: autore
     Valutazione:
       required:
@@ -1320,11 +1380,11 @@ components:
           type: integer
           format: int64
         attività:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         autore:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
       example:
@@ -1342,11 +1402,11 @@ components:
         titolo:
           type: string
         attività:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
         autore:
-          pattern: "/^[a-f\\d]{24}$/i"
+          pattern: "^[a-f\\d]{24}$"
           type: string
           readOnly: true
       example:
@@ -1354,20 +1414,6 @@ components:
         titolo: titolo
         messaggio: messaggio
         autore: autore
-    Intervallo:
-      type: object
-      properties:
-        da:
-          minimum: 0
-          type: integer
-          format: int64
-        a:
-          minimum: 0
-          type: integer
-          format: int64
-      example:
-        a: 0
-        da: 0
     Errore:
       required:
       - code

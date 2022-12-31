@@ -4,7 +4,7 @@ var utils = require('../utils/writer.js');
 var Liste = require('../service/ListeService');
 
 module.exports.aggiungiAttivitaALista = function aggiungiAttivitaALista (req, res, next, id, attivita) {
-  Liste.aggiungiAttivitaALista(id, attivita)
+  Liste.aggiungiAttivitaALista(req, id, attivita)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -14,7 +14,7 @@ module.exports.aggiungiAttivitaALista = function aggiungiAttivitaALista (req, re
 };
 
 module.exports.aggiungiLista = function aggiungiLista (req, res, next, body) {
-  Liste.aggiungiLista(body)
+  Liste.aggiungiLista(req, body)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -24,7 +24,7 @@ module.exports.aggiungiLista = function aggiungiLista (req, res, next, body) {
 };
 
 module.exports.eliminaLista = function eliminaLista (req, res, next, id) {
-  Liste.eliminaLista(id)
+  Liste.eliminaLista(req, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -34,7 +34,7 @@ module.exports.eliminaLista = function eliminaLista (req, res, next, id) {
 };
 
 module.exports.getLista = function getLista (req, res, next, id) {
-  Liste.getLista(id)
+  Liste.getLista(req, id)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -44,7 +44,7 @@ module.exports.getLista = function getLista (req, res, next, id) {
 };
 
 module.exports.getListe = function getListe (req, res, next) {
-  Liste.getListe()
+  Liste.getListe(req)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -54,7 +54,7 @@ module.exports.getListe = function getListe (req, res, next) {
 };
 
 module.exports.rimuoviAttivitaDaLista = function rimuoviAttivitaDaLista (req, res, next, id, indice) {
-  Liste.rimuoviAttivitaDaLista(id, indice)
+  Liste.rimuoviAttivitaDaLista(req, id, indice)
     .then(function (response) {
       utils.writeJson(res, response);
     })
