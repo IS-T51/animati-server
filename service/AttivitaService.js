@@ -5,6 +5,7 @@ var Attivita = require('../models/Attivita.js');
 var Segnalazione = require('../models/Segnalazione.js');
 var Valutazione = require('../models/Valutazione.js');
 var UtenteService = require('./UtenteService.js');
+var mongoose = require('mongoose');
 
 /**
  * Aggiorna il catalogo
@@ -283,94 +284,88 @@ exports.getAttivita = function(id) {
  * filtro Filtro Il filtro da applicare al catalogo (optional)
  * returns List
  **/
-exports.getCatalogo = function(filtro) {
-  console.log(filtro);
+exports.getCatalogo = function(informazioni, autore, ultimaModificaMin, ultimaModificaMax, mediaValutazioniMin, mediaValutazioniMax, numeroSegnalazioniMin, numeroSegnalazioniMax, pagina, limite) {
   return new Promise(async function(resolve, reject) {
     try {
-      let query = {};
-      let limite = 50;
-      let pagina = 0;
-      if (filtro) {
-        if(filtro['titolo']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['titolo'] = {$regex: filtro['titolo'], $options: 'i'};
+      let mongo_query = {};
+      let limit = limite || 50;
+      let page = pagina || 0;
+      
+      if (informazioni) {
+        if(informazioni['titolo']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['titolo'] = {$regex: informazioni['titolo'], $options: 'i'};
         }
-        if(filtro['descrizione']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['descrizione'] = {$regex: filtro['descrizione'], $options: 'i'};
+        if(informazioni['descrizione']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['descrizione'] = {$regex: informazioni['descrizione'], $options: 'i'};
         }
-        if(filtro['etàMin']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['etàMax'] = {$gte: filtro['etàMin']};
+        if(informazioni['etàMin']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['etàMax'] = {$gte: informazioni['etàMin']};
         }
-        if(filtro['etàMax']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['etàMin'] = {$lte: filtro['etàMax']};
+        if(informazioni['etàMax']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['etàMin'] = {$lte: informazioni['etàMax']};
         }
-        if(filtro['durataMin']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['durataMax'] = {$gte: filtro['durataMin']};
+        if(informazioni['durataMin']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['durataMax'] = {$gte: informazioni['durataMin']};
         }
-        if(filtro['durataMax']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['durataMin'] = {$lte: filtro['durataMax']};
+        if(informazioni['durataMax']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['durataMin'] = {$lte: informazioni['durataMax']};
         }
-        if(filtro['giocatoriMin']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['giocatoriMax'] = {$gte: filtro['giocatoriMin']};
+        if(informazioni['giocatoriMin']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['giocatoriMax'] = {$gte: informazioni['giocatoriMin']};
         }
-        if(filtro['giocatoriMax']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['giocatoriMin'] = {$lte: filtro['giocatoriMax']};
+        if(informazioni['giocatoriMax']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['giocatoriMin'] = {$lte: informazioni['giocatoriMax']};
         }
-        if(filtro['giocatoriPerSquadra']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['giocatoriPerSquadra'] = filtro['giocatoriPerSquadra'];
+        if(informazioni['giocatoriPerSquadra']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
         }
-        if(filtro['numeroSquadre']){
-          if(!query['informazioni']) query['informazioni'] = {};
-          query['informazioni']['numeroSquadre'] = filtro['numeroSquadre'];
+        if(informazioni['numeroSquadre']){
+          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
+          mongo_query['informazioni']['numeroSquadre'] = informazioni['numeroSquadre'];
         }
-        if(filtro['autore']){
-          query['autore'] = new mongoose.Types.ObjectId(filtro['autore']);
-        }
-        if(filtro['ultimaModificaMin']){
-          query['ultimaModifica'] = {$gte: filtro['ultimaModificaMin']};
-        }
-        if(filtro['ultimaModificaMax']){
-          query['ultimaModifica'] = {$lte: filtro['ultimaModificaMax']};
-        }
-        if(filtro['mediaValutazioneMin']){
-          query['mediaValutazione'] = {$gte: filtro['mediaValutazioneMin']};
-        }
-        if(filtro['mediaValutazioneMax']){
-          query['mediaValutazione'] = {$lte: filtro['numeroValutazioneMax']};
-        }
-        if(filtro['numeroSegnalazioniMin']){
-          query['numeroSegnalazioni'] = {$gte: filtro['numeroSegnalazioniMin']};
-        }
-        if(filtro['numeroSegnalazioniMax']){
-          query['numeroSegnalazioni'] = {$lte: filtro['numeroSegnalazioniMax']};
-        }
-
-        if(filtro['limite']){
-          limite = filtro['limite'];
-        }
-        if(filtro['pagina']){
-          pagina = filtro['pagina'];
-        }
-
-        // TODO: etichette
-        /*if(filtro['etichette']){
-          query['etichette'] = {$all: filtro['etichette']};
-        }*/
       }
+      if(autore){
+        mongo_query['autore'] = new mongoose.Types.ObjectId(autore);
+      }
+      if(ultimaModificaMin){
+        mongo_query['ultimaModifica'] = {$gte: ultimaModificaMin};
+      }
+      if(ultimaModificaMax){
+        mongo_query['ultimaModifica'] = {$lte: ultimaModificaMax};
+      }
+      if(mediaValutazioniMin){
+        mongo_query['mediaValutazioni'] = {$gte: mediaValutazioniMin};
+      }
+      if(mediaValutazioniMax){
+        mongo_query['mediaValutazioni'] = {$lte: mediaValutazioniMax};
+      }
+      if(numeroSegnalazioniMin){
+        mongo_query['numeroSegnalazioni'] = {$gte: numeroSegnalazioniMin};
+      }
+      if(numeroSegnalazioniMax){
+        mongo_query['numeroSegnalazioni'] = {$lte: numeroSegnalazioniMax};
+      }
+      
+
+      // TODO: etichette
+      /*if(informazioni['etichette']){
+        query['etichette'] = {$all: informazioni['etichette']};
+      }*/
+      
         
       // Trova tutte le etichette
-      
-      var catalogo = await Attivita.find(query)
-      .limit(limite)
-      .skip(limite*pagina)
+      var catalogo = await Attivita.find(mongo_query)
+      .limit(limit)
+      .skip(limit*page)
       .exec();
       
       // Se esiste, restituisci 200, altrimenti 204

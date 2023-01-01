@@ -53,8 +53,8 @@ module.exports.getAttivita = function getAttivita (req, res, next, id) {
     });
 };
 
-module.exports.getCatalogo = function getCatalogo (req, res, next, filtro) {
-  Attivita.getCatalogo(filtro)
+module.exports.getCatalogo = function getCatalogo (req, res, next, informazioni, autore, ultimaModificaMin, ultimaModificaMax, mediaValutazioniMin, mediaValutazioniMax, numeroSegnalazioniMin, numeroSegnalazioniMax, pagina, limite) {
+  Attivita.getCatalogo(informazioni, autore, ultimaModificaMin, ultimaModificaMax, mediaValutazioniMin, mediaValutazioniMax, numeroSegnalazioniMin, numeroSegnalazioniMax, pagina, limite)
     .then(function (response) {
       utils.writeJson(res, response);
     })
