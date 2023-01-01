@@ -195,6 +195,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Token'
+        "201":
+          description: Registrazione effettuata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
         "400":
           description: Richiesta non valida
           content:
@@ -274,7 +280,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Attivita'
         "400":
           description: Richiesta non valida
           content:
@@ -327,7 +333,7 @@ paths:
           type: string
       responses:
         "200":
-          description: Lista di valutazioni
+          description: Valutazione dell'attività
           content:
             application/json:
               schema:
@@ -506,12 +512,6 @@ paths:
               $ref: '#/components/schemas/Segnalazione'
         required: true
       responses:
-        "200":
-          description: Segnalazione aggiornata
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Risposta'
         "201":
           description: Segnalazione aggiunta
           content:
@@ -693,7 +693,7 @@ paths:
               $ref: '#/components/schemas/Attivita'
         required: true
       responses:
-        "200":
+        "201":
           description: Attività aggiunta
           content:
             application/json:
@@ -739,7 +739,7 @@ paths:
           format: date-time
       responses:
         "200":
-          description: Catalogo aggiornato
+          description: Attività da aggiornare
           content:
             application/json:
               schema:
@@ -747,6 +747,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/Attivita'
                 x-content-type: application/json
+        "204":
+          description: Nessuna attività da aggiornare
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
         "400":
           description: Richiesta non valida
           content:
@@ -803,7 +809,7 @@ paths:
               $ref: '#/components/schemas/Lista'
         required: true
       responses:
-        "200":
+        "201":
           description: Lista aggiunta
           content:
             application/json:
@@ -907,7 +913,7 @@ paths:
           pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
-        "200":
+        "201":
           description: Attività aggiunta alla lista
           content:
             application/json:
@@ -1107,6 +1113,12 @@ paths:
         required: true
       responses:
         "200":
+          description: Etichetta aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etichetta'
+        "201":
           description: Etichetta aggiunta
           content:
             application/json:
@@ -1147,6 +1159,12 @@ paths:
       responses:
         "200":
           description: Pong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Risposta'
+        "418":
+          description: I'm a teapot
           content:
             application/json:
               schema:
@@ -1432,6 +1450,7 @@ components:
           - 401
           - 403
           - 404
+          - 418
           - 500
           default: 401
         messaggio:
@@ -1470,7 +1489,7 @@ components:
           token:
             type: string
             readOnly: true
-            example: "{\"token\":\"token\"}"
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiZW1haWwiOiJ0ZXN0QGFuaW1hdGkuYXBwIiwiaW1tYWdpbmUiOiJodHRwczovL3d3dy5hbmltYXRpLmFwcC9hc3NldHMvaW1nL2xvZ285Ni5wbmciLCJydW9sbyI6ImFtbWluaXN0cmF0b3JlIiwicHJvbW9zc29EYSI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwIn0.7VUJK3mbI014Tvkjr6AwJhjCPo5tTPBRmuuLsYJa61c"
   securitySchemes:
     autenticato:
       type: http

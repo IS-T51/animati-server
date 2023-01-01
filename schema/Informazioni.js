@@ -17,4 +17,6 @@ const InformazioniSchema = new mongoose.Schema({
     etichette: [EtichetteSchema]
 });
 
+InformazioniSchema.index({titolo: 1}, {unique: true});
+
 module.exports = InformazioniSchema;

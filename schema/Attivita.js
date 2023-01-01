@@ -17,5 +17,6 @@ const AttivitaSchema = new mongoose.Schema({
 });
 
 AttivitaSchema.index({ultimaModifica: -1});
+AttivitaSchema.index({autore: 1});
 
 module.exports = AttivitaSchema;

@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken');
 const Utente = require('../models/Utente');
+const Lista = require('../models/Lista');
 const dotenv = require('dotenv');
 const utils = require('../utils/writer.js');
 const {OAuth2Client} = require('google-auth-library');
@@ -255,21 +256,46 @@ exports.loginGoogle = function (code) {
 
       // Verifico se l'utente esiste
       var utente = await Utente.findOneAndUpdate(
-        {email: res.data.email},
-        {email: res.data.email, immagine: res.data.picture},
-        {upsert: true, new: true}
+        {email: email},
+        {email: email, immagine: immagine},
+        {upsert: true, new: true, returnOriginal: false }
       ).exec();
 
-      resolve({
-        "messaggio": "Login effettuato",
-        "codice": 200,
-        "token": jwt.sign(utente.toObject(), 
-          process.env.JWT_SECRET_KEY, {
-            expiresIn: 86400 // 24 ore
-          }
-        )
-      })
-      
+      if (utente.value) {
+        resolve({
+          "messaggio": "Login effettuato",
+          "codice": 200,
+          "token": jwt.sign(utente.toObject(), 
+            process.env.JWT_SECRET_KEY, {
+              expiresIn: 86400 // 24 ore
+            }
+          )
+        })
+      } else {
+        // Creo lista preferiti
+        var preferiti = await Lista.findByIdAndUpdate(
+          utente._id,
+          { $set : {autore: utente._id, nome: "Preferiti"}},
+          {upsert: true, new: false}
+        ).exec();
+
+        // Cambio id eventuale conflitto
+        if (preferiti) {
+          var clone = new Lista(preferiti);
+          clone._id = mongoose.Types.ObjectId();
+          await clone.save();
+        }
+
+        resolve({
+          "messaggio": "Registrazione effettuata",
+          "codice": 201,
+          "token": jwt.sign(utente.toObject(),
+            process.env.JWT_SECRET_KEY, {
+              expiresIn: 86400 // 24 ore
+            }
+          )
+        })
+      }
     } catch (err) {
       console.log(err)
       reject(utils.respondWithCode(500, {

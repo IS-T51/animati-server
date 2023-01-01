@@ -12,8 +12,7 @@ const utils = require('../utils/writer.js');
  * attivita Long L'id dell'attività da aggiungere alla lista
  * returns Lista
  **/
-exports.aggiungiAttivitaALista = function(req, id,attivita) {
-  console.log("id: " + id + " attivita: " + attivita);
+exports.aggiungiAttivitaALista = function(req, attivita, id) {
   return new Promise(async function(resolve, reject) {
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function(io) {
@@ -42,7 +41,7 @@ exports.aggiungiAttivitaALista = function(req, id,attivita) {
         // Aggiungi l'attività alla lista
         lista.attività.push(attivita);
         lista.ultimaModifica = new Date();
-        lista.save();
+        await lista.save();
 
         return resolve(lista);
       } catch (err) {
@@ -246,7 +245,7 @@ exports.getListe = function(req) {
  * indice Long L'indice dell'attività da rimuovere dalla lista
  * returns Lista
  **/
-exports.rimuoviAttivitaDaLista = function(req, id,indice) {
+exports.rimuoviAttivitaDaLista = function(req, indice, id) {
   return new Promise(async function(resolve, reject) {
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function(io) {

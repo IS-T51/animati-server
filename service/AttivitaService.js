@@ -112,9 +112,11 @@ exports.aggiungiAttivita = function(body) {
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function(io) {
       try {
+        // TODO: Aggiungi controlli e etichetta proposta
+
         var attivita = await new Attivita(body);
         attivita.autore = io._id;
-        attivita.save();
+        await attivita.save();
 
         resolve(attivita);
       } catch (err) {
@@ -154,10 +156,11 @@ exports.aggiungiSegnalazione = function(req, body,id) {
           }));
         }
         // Ottieni la segnalazione
-        var segnalazione = await Segnalazione.findOneAndUpdate(
-          {autore: io._id, attività: attivita._id, titolo: body.titolo},
-          {autore: io._id, attività: attivita._id, titolo: body.titolo, messaggio: body.messaggio},
-          {upsert: true, new: false, runValidators: true}).exec();
+        var segnalazione = new Segnalazione(
+          {autore: io._id, attività: attivita._id, titolo: body.titolo, messaggio: body.messaggio}
+        )
+        // Salva la segnalazione
+        await segnalazione.save();
         
           // Se ce ne sono, restituisci 200, altrimenti 201
         if(segnalazione) {
@@ -285,6 +288,8 @@ exports.getCatalogo = function(filtro) {
   return new Promise(async function(resolve, reject) {
     try {
       let query = {};
+      let limite = 50;
+      let pagina = 0;
       if (filtro) {
         if(filtro['titolo']){
           if(!query['informazioni']) query['informazioni'] = {};
@@ -348,6 +353,13 @@ exports.getCatalogo = function(filtro) {
           query['numeroSegnalazioni'] = {$lte: filtro['numeroSegnalazioniMax']};
         }
 
+        if(filtro['limite']){
+          limite = filtro['limite'];
+        }
+        if(filtro['pagina']){
+          pagina = filtro['pagina'];
+        }
+
         // TODO: etichette
         /*if(filtro['etichette']){
           query['etichette'] = {$all: filtro['etichette']};
@@ -355,10 +367,10 @@ exports.getCatalogo = function(filtro) {
       }
         
       // Trova tutte le etichette
-      var limit = filtro['limite'] || 100;
+      
       var catalogo = await Attivita.find(query)
-      .limit(limit)
-      .skip(limit*(filtro['pagina'] || 0))
+      .limit(limite)
+      .skip(limite*pagina)
       .exec();
       
       // Se esiste, restituisci 200, altrimenti 204
@@ -413,6 +425,8 @@ exports.modificaAttivita = function(req, body,id) {
             "codice" : 403
           }));
         }
+
+        // TODO: Aggiungi controlli e etichetta proposta
 
         // Modifica l'attività
         attivita = await Attivita.findByIdAndUpdate(id, {
