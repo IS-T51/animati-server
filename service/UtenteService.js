@@ -245,7 +245,8 @@ exports.loginGoogle = function (code) {
   return new Promise(async function (resolve, reject) {
     try {
       // Ottengo il token
-      const {tokens} = await OAUTH.getToken(decodeURIComponent(code));
+
+      OAUTH.getToken(decodeURIComponent(code)).then(async function ({tokens}){
       const client = new OAuth2Client();
       client.setCredentials(tokens);
       const oauth = google.oauth2({version: 'v2', auth: client});
@@ -296,6 +297,18 @@ exports.loginGoogle = function (code) {
           )
         })
       }
+    }).catch(function (err) {
+      let status = err?.response?.status;
+      if(status == 400){
+        console.log(err)
+        return reject(utils.respondWithCode(400, {
+          "messaggio": "Codice invalido",
+          "codice": 400,
+          "errore": err
+        }));
+      }
+      throw err
+    })
     } catch (err) {
       console.log(err)
       reject(utils.respondWithCode(500, {
