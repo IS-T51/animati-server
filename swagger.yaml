@@ -1352,8 +1352,11 @@ components:
           pattern: '[^,]{1,20}'
         descrizione:
           type: string
+          maxLength: 2000
         categoria:
           type: string
+          maxLength: 20
+          minLength: 1
       example:
         descrizione: descrizione
         categoria: categoria

@@ -11,10 +11,10 @@ const UtenteService = require('./UtenteService');
  * body Etichetta L'etichetta da aggiungere
  * returns Etichetta
  **/
-exports.aggiungiEtichetta = function(req, body) {
+exports.aggiungiEtichetta = function(req, body) {                     // i 400 dati da swagger.yaml sono già gestiti (compreso numero sbagliato parametri)
   return new Promise(async function(resolve, reject) {
     // Verifico che sia amministratore
-    UtenteService.getUtente(req).then(async function(io) {
+    UtenteService.getUtente(req).then(async function(io) {            // 401 lo fa il getUtente con reject(response)
       try {
         // Se non è amministratore, restituisci 403
         if(io.ruolo != "amministratore") {
@@ -23,7 +23,7 @@ exports.aggiungiEtichetta = function(req, body) {
             "codice" : 403
           }));
         }
-        
+
         // Aggiorna o inserisci l'etichetta
         var etichetta = await Etichetta.findOneAndUpdate(
           {nome: body.nome},

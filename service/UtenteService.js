@@ -121,7 +121,7 @@ exports.modificaRuolo = function (req, ruolo, id) {
             }
           }));
         }
-        // Se sto modificando il mio ruolo, restituisci 403
+        // Se sto modificando il mio ruolo, restituisci 403 (perché il super-admin si è promosso da solo)
         if (io._id.toString() == id) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
@@ -172,7 +172,7 @@ exports.modificaRuolo = function (req, ruolo, id) {
           }
 
           // Modifica il promotore di tutti i promossi da utente
-          Utente.updateMany({
+          await Utente.updateMany({
             promossoDa: utente._id
           }, {
             promossoDa: utente.promossoDa
@@ -205,7 +205,7 @@ exports.modificaRuolo = function (req, ruolo, id) {
 /**
  * Login
  * Reindiritizza l'utente alla pagina di login
- * 
+ *
  * returns Risposta
  */
 exports.login = function () {
@@ -237,8 +237,8 @@ exports.login = function () {
  * returns Utente
  **/
 const OAUTH = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID, 
-  process.env.GOOGLE_CLIENT_SECRET, 
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
   process.env.GOOGLE_REDIRECT_URI
 );
 exports.loginGoogle = function (code) {
@@ -250,7 +250,7 @@ exports.loginGoogle = function (code) {
       client.setCredentials(tokens);
       const oauth = google.oauth2({version: 'v2', auth: client});
       const res = await oauth.userinfo.get();
-      
+
       const email = res.data.email;
       const immagine = res.data.picture;
 
@@ -265,7 +265,7 @@ exports.loginGoogle = function (code) {
         resolve({
           "messaggio": "Login effettuato",
           "codice": 200,
-          "token": jwt.sign(utente.toObject(), 
+          "token": jwt.sign(utente.toObject(),
             process.env.JWT_SECRET_KEY, {
               expiresIn: 86400 // 24 ore
             }
@@ -279,7 +279,7 @@ exports.loginGoogle = function (code) {
           {upsert: true, new: false}
         ).exec();
 
-        // Cambio id eventuale conflitto
+        // Cambio id eventuale conflitto    // potrebbe essere un problema per la sincronizzazione offline
         if (preferiti) {
           var clone = new Lista(preferiti);
           clone._id = mongoose.Types.ObjectId();
