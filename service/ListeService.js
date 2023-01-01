@@ -128,6 +128,17 @@ exports.eliminaLista = function(req, id) {
           }));
         }
 
+        //non eliminare preferiti
+        if(lista._id.equals(io._id)){
+          return reject(utils.respondWithCode(400, {
+            "messaggio" : "Richiesta invalida",
+            "codice" : 400,
+            "errore" : {
+              "message" : "Non si può eliminare la lista preferiti"
+            }
+          }));
+        }
+
         // Elimina la lista
         lista.remove();
 

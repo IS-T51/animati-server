@@ -5,7 +5,7 @@ const Utente = require('../models/Utente');
 const Lista = require('../models/Lista');
 const dotenv = require('dotenv');
 const utils = require('../utils/writer.js');
-const {OAuth2Client} = require('google-auth-library');
+const { OAuth2Client } = require('google-auth-library');
 const { google } = require('googleapis');
 dotenv.config();
 
@@ -243,13 +243,13 @@ const OAUTH = new OAuth2Client(
 );
 exports.loginGoogle = function (code) {
   return new Promise(async function (resolve, reject) {
-    try {
-      // Ottengo il token
 
-      OAUTH.getToken(decodeURIComponent(code)).then(async function ({tokens}){
+    // Ottengo il token
+
+    await OAUTH.getToken(decodeURIComponent(code)).then(async function ({ tokens }) {
       const client = new OAuth2Client();
       client.setCredentials(tokens);
-      const oauth = google.oauth2({version: 'v2', auth: client});
+      const oauth = google.oauth2({ version: 'v2', auth: client });
       const res = await oauth.userinfo.get();
 
       const email = res.data.email;
@@ -257,9 +257,9 @@ exports.loginGoogle = function (code) {
 
       // Verifico se l'utente esiste
       var utente = await Utente.findOneAndUpdate(
-        {email: email},
-        {email: email, immagine: immagine},
-        {upsert: true, new: true, returnOriginal: false }
+        { email: email },
+        { email: email, immagine: immagine },
+        { upsert: true, new: true, returnOriginal: false }
       ).exec();
 
       if (utente.value) {
@@ -268,16 +268,16 @@ exports.loginGoogle = function (code) {
           "codice": 200,
           "token": jwt.sign(utente.toObject(),
             process.env.JWT_SECRET_KEY, {
-              expiresIn: 86400 // 24 ore
-            }
+            expiresIn: 86400 // 24 ore
+          }
           )
         })
       } else {
         // Creo lista preferiti
         var preferiti = await Lista.findByIdAndUpdate(
           utente._id,
-          { $set : {autore: utente._id, nome: "Preferiti"}},
-          {upsert: true, new: false}
+          { $set: { autore: utente._id, nome: "Preferiti" } },
+          { upsert: true, new: false }
         ).exec();
 
         // Cambio id eventuale conflitto    // potrebbe essere un problema per la sincronizzazione offline
@@ -292,14 +292,14 @@ exports.loginGoogle = function (code) {
           "codice": 201,
           "token": jwt.sign(utente.toObject(),
             process.env.JWT_SECRET_KEY, {
-              expiresIn: 86400 // 24 ore
-            }
+            expiresIn: 86400 // 24 ore
+          }
           )
         })
       }
     }).catch(function (err) {
       let status = err?.response?.status;
-      if(status == 400){
+      if (status == 400) {
         console.log(err)
         return reject(utils.respondWithCode(400, {
           "messaggio": "Codice invalido",
@@ -307,15 +307,14 @@ exports.loginGoogle = function (code) {
           "errore": err
         }));
       }
-      throw err
-    })
-    } catch (err) {
+
       console.log(err)
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
         "codice": 500,
         "errore": err
       }));
-    }
+    })
+
   });
 }
