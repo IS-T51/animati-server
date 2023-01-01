@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.2.3
+  version: 0.3.0
 servers:
 - url: https://api.animati.app/
 - url: http://localhost:8080/
@@ -1166,7 +1166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
       x-swagger-router-controller: Default
 components:
   schemas:
@@ -1184,11 +1184,13 @@ components:
         email:
           type: string
           format: email
+          readOnly: true
         ruolo:
           type: string
           enum:
           - autenticato
           - amministratore
+          readOnly: true
         promossoDa:
           pattern: "^[a-f\\d]{24}$"
           type: string
@@ -1197,12 +1199,14 @@ components:
           type: string
           description: Il link all'immagine dell'utente
           format: uri
+          maxLength: 512
+          readOnly: true
       example:
         ruolo: autenticato
-        promossoDa: promossoDa
-        id: id
-        immagine: http://example.com/aeiou
-        email: ""
+        promossoDa: 63b0201d249a3fa2cf566a4e
+        id: 63b1b59a249a3fa2cf6989e6
+        immagine: https://picsum.photos/700/400
+        email: anonimo1@animati.app
     Attivita:
       required:
       - id
@@ -1216,6 +1220,7 @@ components:
           type: string
           description: Il link al banner dell'attività
           format: uri
+          maxLength: 512
         informazioni:
           $ref: '#/components/schemas/Informazioni'
         collegamenti:
@@ -1225,6 +1230,7 @@ components:
         ultimaModifica:
           type: string
           format: date-time
+          readOnly: true
         autore:
           pattern: "^[a-f\\d]{24}$"
           type: string
@@ -1234,93 +1240,106 @@ components:
           minimum: 0
           type: number
           format: double
+          readOnly: true
         numeroSegnalazioni:
           minimum: 0
           type: integer
           format: int64
+          readOnly: true
       example:
         numeroSegnalazioni: 0
         ultimaModifica: 2000-01-23T04:56:07.000+00:00
         mediaValutazioni: 3.61607674925191080461672754609026014804840087890625
-        banner: http://example.com/aeiou
-        id: id
+        banner: https://picsum.photos/700/400
+        id: 63b189dbf6e4763b528548f4
         collegamenti:
         - link: http://example.com/aeiou
           nome: nome
         - link: http://example.com/aeiou
           nome: nome
         informazioni:
-          etàMax: 0
+          etàMax: 1
           etichette:
           - etichette
           - etichette
           descrizione: descrizione
-          etàMin: 0
-          durataMin: 0
+          etàMin: 1
+          durataMin: 1
           titolo: titolo
           durataMax: 0
-          giocatoriPerSquadra: 0
-          numeroSquadre: 0
-          giocatoriMax: 0
-          giocatoriMin: 0
-        autore: autore
+          giocatoriPerSquadra: 1
+          numeroSquadre: 1
+          giocatoriMax: 1
+          giocatoriMin: 1
+        autore: 63b1b59a249a3fa2cf6989e6
     Informazioni:
       type: object
       properties:
         titolo:
           type: string
+          maxLength: 20
         descrizione:
           type: string
+          maxLength: 4096
         etàMin:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         etàMax:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         durataMin:
-          minimum: 0
+          minimum: 1
+          maximum: 9999
           type: integer
           format: int64
         durataMax:
-          minimum: 0
+          minimum: 1
+          maximum: 9999
           type: integer
           format: int64
         giocatoriMin:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         giocatoriMax:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         giocatoriPerSquadra:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         numeroSquadre:
-          minimum: 0
+          minimum: 1
+          maximum: 99
           type: integer
           format: int64
         etichette:
           type: array
           items:
             type: string
+            pattern: '[^,]{1,20}'
       example:
-        etàMax: 0
+        etàMax: 1
         etichette:
         - etichette
         - etichette
         descrizione: descrizione
-        etàMin: 0
-        durataMin: 0
+        etàMin: 1
+        durataMin: 1
         titolo: titolo
-        durataMax: 0
-        giocatoriPerSquadra: 0
-        numeroSquadre: 0
-        giocatoriMax: 0
-        giocatoriMin: 0
+        durataMax: 1
+        giocatoriPerSquadra: 1
+        numeroSquadre: 1
+        giocatoriMax: 1
+        giocatoriMin: 1
     Etichetta:
       required:
       - categoria
@@ -1330,6 +1349,7 @@ components:
       properties:
         nome:
           type: string
+          pattern: '[^,]{1,20}'
         descrizione:
           type: string
         categoria:
@@ -1346,15 +1366,16 @@ components:
       properties:
         nome:
           type: string
+          maxLength: 128
         link:
           type: string
           format: uri
+          maxLength: 512
       example:
         link: http://example.com/aeiou
         nome: nome
     Lista:
       required:
-      - attività
       - id
       - nome
       type: object
@@ -1365,6 +1386,8 @@ components:
           readOnly: true
         nome:
           type: string
+          maxLength: 20
+          minLength: 1
         autore:
           pattern: "^[a-f\\d]{24}$"
           type: string
@@ -1381,16 +1404,15 @@ components:
           readOnly: true
       example:
         attività:
-        - attività
-        - attività
+        - 63b189dbf6e4763b528548f4
+        - 63b189dbf6e4763b528548f4
         ultimaModifica: 2000-01-23T04:56:07.000+00:00
         nome: nome
         id: id
-        autore: autore
+        autore: 63b1b59a249a3fa2cf6989e6
     Valutazione:
       required:
       - attività
-      - autore
       - voto
       type: object
       properties:
@@ -1408,19 +1430,24 @@ components:
           type: string
           readOnly: true
       example:
-        attività: attività
+        attività: 63b189dbf6e4763b528548f4
         voto: 1
-        autore: autore
+        autore: 63b1b59a249a3fa2cf6989e6
     Segnalazione:
       required:
       - messaggio
       - titolo
+      - autore
       type: object
       properties:
         messaggio:
           type: string
+          maxLength: 500
+          minLength: 1
         titolo:
           type: string
+          maxLength: 50
+          minLength: 1
         attività:
           pattern: "^[a-f\\d]{24}$"
           type: string
@@ -1430,10 +1457,10 @@ components:
           type: string
           readOnly: true
       example:
-        attività: attività
+        attività: 63b189dbf6e4763b528548f4
         titolo: titolo
         messaggio: messaggio
-        autore: autore
+        autore: 63b1b59a249a3fa2cf6989e6
     Errore:
       required:
       - code
@@ -1453,10 +1480,14 @@ components:
           default: 401
         messaggio:
           type: string
+          maxLength: 128
+          minLength: 1
           readOnly: true
           default: Autenticazione necessaria per fare questa richiesta
-        errore:
-          type: object
+        errori:
+          type: array
+          items:
+            type: object
           readOnly: true
     Risposta:
       required:
@@ -1475,6 +1506,8 @@ components:
           - 302
         messaggio:
           type: string
+          maxLength: 128
+          minLength: 1
           readOnly: true
       example:
         messaggio: ok
@@ -1493,4 +1526,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      
+
