@@ -71,7 +71,7 @@ exports.ottieniEtichette = function() {
       // Trova tutte le etichette
       var etichette = await Etichetta.find().exec();
       // Se ce ne sono, restituisci 200, altrimenti 204
-      if(etichette) {
+      if(etichette?.length) {
         resolve(etichette);
       } else {
         resolve(utils.respondWithCode(204,{
