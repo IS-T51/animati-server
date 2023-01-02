@@ -7,7 +7,6 @@ var Valutazione = require('../models/Valutazione.js');
 var UtenteService = require('./UtenteService.js');
 var Etichetta = require('../models/Etichetta.js');
 var mongoose = require('mongoose');
-const { dataform } = require('googleapis/build/src/apis/dataform/index.js');
 
 /**
  * Aggiorna il catalogo
