@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.3.0
+  version: 0.3.1
 servers:
 - url: https://api.animati.app/
 - url: http://localhost:8080/

@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.3.0
+  version: 0.3.1
 servers:
 - url: https://api.animati.app/
 - url: http://localhost:8080/
@@ -860,6 +860,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
@@ -975,6 +981,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
@@ -1026,6 +1038,8 @@ paths:
         style: simple
         explode: false
         schema:
+          maximum: 9999
+          minimum: 0
           type: integer
           format: int64
       responses:
@@ -1353,8 +1367,11 @@ components:
           pattern: "[^,]{1,20}"
           type: string
         descrizione:
+          maxLength: 2000
           type: string
         categoria:
+          maxLength: 20
+          minLength: 1
           type: string
       example:
         descrizione: descrizione
