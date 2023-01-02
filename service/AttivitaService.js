@@ -304,44 +304,34 @@ exports.getCatalogo = function(informazioni, autore, ultimaModificaMin, ultimaMo
       
       if (informazioni) {
         if(informazioni['titolo']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['titolo'] = {$regex: informazioni['titolo'], $options: 'i'};
+          mongo_query['informazioni.titolo'] = {$regex: informazioni['titolo'], $options: 'i'};
         }
         if(informazioni['descrizione']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['descrizione'] = {$regex: informazioni['descrizione'], $options: 'i'};
+          mongo_query['informazioni.descrizione'] = {$regex: informazioni['descrizione'], $options: 'i'};
         }
         if(informazioni['etàMin']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['etàMax'] = {$gte: informazioni['etàMin']};
+          mongo_query['informazioni.etàMax'] = {$gte: informazioni['etàMin']};
         }
         if(informazioni['etàMax']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['etàMin'] = {$lte: informazioni['etàMax']};
+          mongo_query['informazioni.etàMin'] = {$lte: informazioni['etàMax']};
         }
         if(informazioni['durataMin']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['durataMax'] = {$gte: informazioni['durataMin']};
+          mongo_query['informazioni.durataMax'] = {$gte: informazioni['durataMin']};
         }
         if(informazioni['durataMax']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['durataMin'] = {$lte: informazioni['durataMax']};
+          mongo_query['informazioni.durataMin'] = {$lte: informazioni['durataMax']};
         }
         if(informazioni['giocatoriMin']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['giocatoriMax'] = {$gte: informazioni['giocatoriMin']};
+          mongo_query['informazioni.giocatoriMax'] = {$gte: informazioni['giocatoriMin']};
         }
         if(informazioni['giocatoriMax']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['giocatoriMin'] = {$lte: informazioni['giocatoriMax']};
+          mongo_query['informazioni.giocatoriMin'] = {$lte: informazioni['giocatoriMax']};
         }
         if(informazioni['giocatoriPerSquadra']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
+          mongo_query['informazioni.giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
         }
         if(informazioni['numeroSquadre']){
-          mongo_query['informazioni'] = mongo_query['informazioni'] || {};
-          mongo_query['informazioni']['numeroSquadre'] = informazioni['numeroSquadre'];
+          mongo_query['informazioni.numeroSquadre'] = informazioni['numeroSquadre'];
         }
       }
       if(autore){
@@ -366,7 +356,6 @@ exports.getCatalogo = function(informazioni, autore, ultimaModificaMin, ultimaMo
         mongo_query['numeroSegnalazioni'] = {$lte: numeroSegnalazioniMax};
       }
       
-
       // TODO: etichette
       /*if(informazioni['etichette']){
         query['etichette'] = {$all: informazioni['etichette']};
@@ -380,7 +369,7 @@ exports.getCatalogo = function(informazioni, autore, ultimaModificaMin, ultimaMo
       .exec();
       
       // Se esiste, restituisci 200, altrimenti 204
-      if (catalogo) {
+      if (catalogo?.length) {
         resolve(catalogo);
       } else{
         resolve(utils.respondWithCode(204, {
