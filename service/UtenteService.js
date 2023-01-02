@@ -257,13 +257,10 @@ exports.loginGoogle = function (code) {
       const immagine = res.data.picture;
 
       // Verifico se l'utente esiste
-      var utente = await Utente.findOneAndUpdate(
-        { email: email },
-        { email: email, immagine: immagine },
-        { upsert: true, new: true, returnOriginal: false }
-      ).exec();
+      var utente = await Utente.findOne({ email: email }).exec();
 
-      if (utente.value) {
+      if (utente) {
+        // Se esiste, restituisci il token
         resolve({
           "messaggio": "Login effettuato",
           "codice": 200,
@@ -274,6 +271,13 @@ exports.loginGoogle = function (code) {
           )
         })
       } else {
+        // Se non esiste, crealo
+        utente = await Utente.findOneAndUpdate(
+          { email: email },
+          { email: email, immagine: immagine },
+          { upsert: true, new: true}
+        ).exec();
+
         // Creo lista preferiti
         var preferiti = await Lista.findByIdAndUpdate(
           utente._id,
