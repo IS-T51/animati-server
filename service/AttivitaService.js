@@ -394,8 +394,7 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       } else {
         resolve(utils.respondWithCode(204, {
           "messaggio": "Nessuna attività trovata",
-          "codice": 204,
-          "errore": err
+          "codice": 204
         }));
       }
     } catch (err) {
