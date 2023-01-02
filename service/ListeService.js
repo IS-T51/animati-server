@@ -339,7 +339,8 @@ exports.rimuoviAttivitaDaLista = function (req, id, indice) {
         }
 
         // Rimuovi l'attività
-        await lista.attività.splice(indice, 1);
+        lista.attività.splice(indice, 1);
+        lista.ultimaModifica = new Date();
         await lista.save();
 
         return resolve(lista);

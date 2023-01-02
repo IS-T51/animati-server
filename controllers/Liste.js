@@ -53,8 +53,8 @@ module.exports.getListe = function getListe (req, res, next) {
     });
 };
 
-module.exports.rimuoviAttivitaDaLista = function rimuoviAttivitaDaLista (req, res, next, indice, id) {
-  Liste.rimuoviAttivitaDaLista(req, indice, id)
+module.exports.rimuoviAttivitaDaLista = function rimuoviAttivitaDaLista (req, res, next, id, indice) {
+  Liste.rimuoviAttivitaDaLista(req, id, indice)
     .then(function (response) {
       utils.writeJson(res, response);
     })
