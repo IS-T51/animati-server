@@ -2,26 +2,24 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
-function connect() {
+async function connect() {
     // Indirizzo del cluster di MongoDB Atlas
     const mongoAtlasUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`
 
     // Provo a connettermi al cluster di MongoDB Atlas
-    try {
-        mongoose.connect(
-            mongoAtlasUri, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            },
-            () => console.log(" Mongoose is connected"),
-        );
-    } catch (e) {
-        console.log("could not connect");
-    }
+    await mongoose.connect(
+        mongoAtlasUri,
+        { useNewUrlParser: true, useUnifiedTopology: true }
+    ).then(
+        () => console.log("Mongoose is connected\n"),
+        err => { console.log("Could not connect:\n\t" + err); }
+    );
 
     const dbConnection = mongoose.connection;
-    dbConnection.on("error", (err) => console.log(`Connection error ${err}`));
-    dbConnection.once("open", () => console.log("Connected to DB!"));
+    dbConnection.on("error", (err) => console.log(`Connection error: ${err}`));
+
+    //Note that Mongoose does not necessarily emit an 'error' event if it loses connectivity to MongoDB. You should listen to the disconnected event to report when Mongoose is disconnected from MongoDB.
+
 }
 
 function disconnect() {
