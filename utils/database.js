@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
 
+mongoose.set('strictQuery', true)
+
 function connect() {
     return new Promise(async (resolve, reject) => {
         // Indirizzo del cluster di MongoDB Atlas
