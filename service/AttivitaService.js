@@ -5,6 +5,7 @@ var Attivita = require('../models/Attivita.js');
 var Segnalazione = require('../models/Segnalazione.js');
 var Valutazione = require('../models/Valutazione.js');
 var UtenteService = require('./UtenteService.js');
+var Etichetta = require('../models/Etichetta.js');
 var mongoose = require('mongoose');
 
 /**
@@ -108,19 +109,29 @@ exports.aggiornaCatalogo = function(data) {
  * body Attivita L'attività da aggiungere
  * returns Attivita
  **/
-exports.aggiungiAttivita = function(body) {
+exports.aggiungiAttivita = function(req, body) {
   return new Promise(async function(resolve, reject) {
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function(io) {
       try {
         // TODO: Aggiungi controlli e etichetta proposta
+        // Cerco o creo l'etichetta
+        var etichette = [];
+        var etichetteString = body.informazioni?.etichette || [];
+        await Promise.all(etichetteString.map(async function(etichetta) {
+          var etichetta = await Etichetta.findOne({nome: etichetta});
+          etichette.push(etichetta);
+        }));
+        body.informazioni.etichette = etichette;
 
+        console.log(body);
         var attivita = await new Attivita(body);
         attivita.autore = io._id;
         await attivita.save();
 
         resolve(attivita);
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio" : "Errore interno",
           "codice" : 500,

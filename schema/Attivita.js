@@ -6,7 +6,10 @@ const AttivitaSchema = new mongoose.Schema({
     banner: String,
     informazioni: InformazioniSchema,
     collegamenti: [CollegamentoSchema],
-    ultimaModifica: Date,
+    ultimaModifica: {
+        type: Date,
+        default: Date.now
+    },
     autore: {
         type: mongoose.Types.ObjectId,
         ref: 'Utenti',

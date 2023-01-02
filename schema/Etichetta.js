@@ -15,6 +15,6 @@ const EtichettaSchema = new mongoose.Schema({
     }
 });
 
-EtichettaSchema.index({nome: 1}, {unique: true});
+EtichettaSchema.index({nome: 1});
 
 module.exports = EtichettaSchema;
