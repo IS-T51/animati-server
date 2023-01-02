@@ -21,7 +21,7 @@ exports.aggiornaCatalogo = function (data) {
   return new Promise(async function (resolve, reject) {
     try {
 
-      if(new Date(data) > new Date()){
+      if (new Date(data) > new Date()) {
         return reject(utils.respondWithCode(400, {
           "messaggio": "Data invalida",
           "codice": 400
@@ -33,12 +33,12 @@ exports.aggiornaCatalogo = function (data) {
       ).exec();
 
 
-      if(aggiornati?.length) {
+      if (aggiornati?.length) {
         return resolve(aggiornati);
       } else {
-        return resolve(utils.respondWithCode(204,{
-          "messaggio" : "Nessuna attività da aggiornare",
-          "codice" : 204
+        return resolve(utils.respondWithCode(204, {
+          "messaggio": "Nessuna attività da aggiornare",
+          "codice": 204
         }));
       }
     } catch (err) {
@@ -64,25 +64,103 @@ exports.aggiungiAttivita = function (req, body) {
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
-        // TODO: Aggiungi controlli e etichetta proposta
-        // Cerco o creo l'etichetta
+        try {
+          if (!body.informazioni) throw 'informazioni';
+          if(!body.banner) throw 'banner';
+          if(!body.informazioni.titolo) throw 'titolo';
+          if(!body.informazioni.descrizione) throw 'descrizione';
+          if(!body.informazioni.etàMin || !body.informazioni.etàMax) throw 'età';
+          if(!body.informazioni.durataMin || !body.informazioni.durataMax) throw 'durata';
+          if(!body.informazioni.giocatoriMin || !body.informazioni.giocatoriMax) throw 'giocatori';
+        } catch (err) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": ("Informazioni mancanti: " + err)
+          }));
+        }
+
+        if((body.informazioni.etàMin > body.informazioni.etàMax) || (body.informazioni.durataMin > body.informazioni.durataMax) || (body.informazioni.giocatoriMin > body.informazioni.giocatoriMax)){
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": "Intervalli non validi"
+          }));
+        }
+
+        var titolo = body.informazioni.titolo;
+        // controllare se il titolo è valido
+        /*var titolo = body.informazioni?.titolo;
+        if (titolo == "") {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Titolo non valido",
+            "codice": 400,
+            "errore": "Il titolo deve essere presente"
+          }));
+        }*/
+//console.log(titolo);
+        // Cerco o creo l'etichetta proposta
+        var isProposta = false;
         var etichette = [];
         var etichetteString = body.informazioni?.etichette || [];
-        await Promise.all(etichetteString.map(async function (etichetta) {
-          var etichetta = await Etichetta.findOne({ nome: etichetta });
+        await Promise.all(etichetteString.map(async function (nomeEtichetta) {
+          if (nomeEtichetta == "proposta")
+            isProposta = true;
+          var etichetta = await Etichetta.findOne({ nome: nomeEtichetta });
+          if(!etichetta){
+            return reject(utils.respondWithCode(400, {
+              "messaggio": "Informazioni non valide",
+              "codice": 400,
+              "errore": ("Etichetta inesistente: " + nomeEtichetta)
+            }));
+          }
           etichette.push(etichetta);
         }));
+        if (!isProposta && !io.ruolo!='amministratore') {
+          var proposta = await Etichetta.findOne(
+            { nome: "proposta" }
+          ).exec();
+          if (!proposta) {
+            proposta = new Etichetta({
+              nome: 'proposta',
+              descrizione: 'Questa attività è una proposta di un utente',
+              categoria: 'sistema'
+            });
+          }
+          etichette.push(proposta);
+        }
         body.informazioni.etichette = etichette;
+
+
+        // cercare se l'attività è già presente
+        var mongo_query = {};
+        mongo_query['informazioni'] = {};
+        //mongo_query['informazioni']['titolo'] = body.informazioni['titolo'];
+        mongo_query = {'informazioni.titolo': titolo};
+        var cloni = await Attivita.find(mongo_query).exec();
+        console.log("here");
+        console.log(cloni);
+        if (cloni?.length) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Titolo non valido",
+            "codice": 400,
+            "errore": "Esiste già un'attività con questo titolo"
+          }));
+        }
 
         console.log(body);
         var attivita = await new Attivita(body);
         attivita.autore = io._id;
         await attivita.save();
 
-        resolve(attivita);
+        return resolve(utils.respondWithCode(201, {
+          "messaggio": "Attività aggiunta",
+          "codice": 201,
+          "etichetta": attivita
+        }));
       } catch (err) {
         console.log(err);
-        reject(utils.respondWithCode(500, {
+        return reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
           "codice": 500,
           "errore": err
