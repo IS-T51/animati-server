@@ -25,7 +25,9 @@ http.createServer(app).listen(serverPort, function () {
 });
 
 const database = require('./utils/database');
-database.connect();
-database.createCollections();
+database.connect()
+.then(() => {
+    database.createCollections();
+});
 
 module.exports = app;
