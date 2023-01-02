@@ -60,17 +60,20 @@ exports.aggiornaCatalogo = function (data) {
  **/
 exports.aggiungiAttivita = function (req, body) {
   return new Promise(async function (resolve, reject) {
+
     // Verifico che autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
+
+        // controlli validità info
         try {
           if (!body.informazioni) throw 'informazioni';
-          if(!body.banner) throw 'banner';
-          if(!body.informazioni.titolo) throw 'titolo';
-          if(!body.informazioni.descrizione) throw 'descrizione';
-          if(!body.informazioni.etàMin || !body.informazioni.etàMax) throw 'età';
-          if(!body.informazioni.durataMin || !body.informazioni.durataMax) throw 'durata';
-          if(!body.informazioni.giocatoriMin || !body.informazioni.giocatoriMax) throw 'giocatori';
+          if (!body.banner) throw 'banner';
+          if (!body.informazioni.titolo) throw 'titolo';
+          if (!body.informazioni.descrizione) throw 'descrizione';
+          if (!body.informazioni.etàMin || !body.informazioni.etàMax) throw 'età';
+          if (!body.informazioni.durataMin || !body.informazioni.durataMax) throw 'durata';
+          if (!body.informazioni.giocatoriMin || !body.informazioni.giocatoriMax) throw 'giocatori';
         } catch (err) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
@@ -79,7 +82,7 @@ exports.aggiungiAttivita = function (req, body) {
           }));
         }
 
-        if((body.informazioni.etàMin > body.informazioni.etàMax) || (body.informazioni.durataMin > body.informazioni.durataMax) || (body.informazioni.giocatoriMin > body.informazioni.giocatoriMax)){
+        if ((body.informazioni.etàMin > body.informazioni.etàMax) || (body.informazioni.durataMin > body.informazioni.durataMax) || (body.informazioni.giocatoriMin > body.informazioni.giocatoriMax)) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
             "codice": 400,
@@ -87,18 +90,7 @@ exports.aggiungiAttivita = function (req, body) {
           }));
         }
 
-        var titolo = body.informazioni.titolo;
-        // controllare se il titolo è valido
-        /*var titolo = body.informazioni?.titolo;
-        if (titolo == "") {
-          return reject(utils.respondWithCode(400, {
-            "messaggio": "Titolo non valido",
-            "codice": 400,
-            "errore": "Il titolo deve essere presente"
-          }));
-        }*/
-//console.log(titolo);
-        // Cerco o creo l'etichetta proposta
+        // etichette da stringhe a etichette e proposta
         var isProposta = false;
         var etichette = [];
         var etichetteString = body.informazioni?.etichette || [];
@@ -106,7 +98,7 @@ exports.aggiungiAttivita = function (req, body) {
           if (nomeEtichetta == "proposta")
             isProposta = true;
           var etichetta = await Etichetta.findOne({ nome: nomeEtichetta });
-          if(!etichetta){
+          if (!etichetta) {
             return reject(utils.respondWithCode(400, {
               "messaggio": "Informazioni non valide",
               "codice": 400,
@@ -115,7 +107,7 @@ exports.aggiungiAttivita = function (req, body) {
           }
           etichette.push(etichetta);
         }));
-        if (!isProposta && !io.ruolo!='amministratore') {
+        if (!isProposta && !io.ruolo != 'amministratore') {
           var proposta = await Etichetta.findOne(
             { nome: "proposta" }
           ).exec();
@@ -125,6 +117,7 @@ exports.aggiungiAttivita = function (req, body) {
               descrizione: 'Questa attività è una proposta di un utente',
               categoria: 'sistema'
             });
+            await proposta.save();
           }
           etichette.push(proposta);
         }
@@ -132,13 +125,13 @@ exports.aggiungiAttivita = function (req, body) {
 
 
         // cercare se l'attività è già presente
+        var titolo = body.informazioni.titolo;
         var mongo_query = {};
         mongo_query['informazioni'] = {};
-        //mongo_query['informazioni']['titolo'] = body.informazioni['titolo'];
-        mongo_query = {'informazioni.titolo': titolo};
+        mongo_query = { 'informazioni.titolo': titolo };
         var cloni = await Attivita.find(mongo_query).exec();
-        console.log("here");
-        console.log(cloni);
+        //console.log("here");
+        //console.log(cloni);
         if (cloni?.length) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Titolo non valido",
@@ -330,34 +323,34 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       let page = pagina || 0;
 
       if (informazioni) {
-        if(informazioni['titolo']){
-          mongo_query['informazioni.titolo'] = {$regex: informazioni['titolo'], $options: 'i'};
+        if (informazioni['titolo']) {
+          mongo_query['informazioni.titolo'] = { $regex: informazioni['titolo'], $options: 'i' };
         }
-        if(informazioni['descrizione']){
-          mongo_query['informazioni.descrizione'] = {$regex: informazioni['descrizione'], $options: 'i'};
+        if (informazioni['descrizione']) {
+          mongo_query['informazioni.descrizione'] = { $regex: informazioni['descrizione'], $options: 'i' };
         }
-        if(informazioni['etàMin']){
-          mongo_query['informazioni.etàMax'] = {$gte: informazioni['etàMin']};
+        if (informazioni['etàMin']) {
+          mongo_query['informazioni.etàMax'] = { $gte: informazioni['etàMin'] };
         }
-        if(informazioni['etàMax']){
-          mongo_query['informazioni.etàMin'] = {$lte: informazioni['etàMax']};
+        if (informazioni['etàMax']) {
+          mongo_query['informazioni.etàMin'] = { $lte: informazioni['etàMax'] };
         }
-        if(informazioni['durataMin']){
-          mongo_query['informazioni.durataMax'] = {$gte: informazioni['durataMin']};
+        if (informazioni['durataMin']) {
+          mongo_query['informazioni.durataMax'] = { $gte: informazioni['durataMin'] };
         }
-        if(informazioni['durataMax']){
-          mongo_query['informazioni.durataMin'] = {$lte: informazioni['durataMax']};
+        if (informazioni['durataMax']) {
+          mongo_query['informazioni.durataMin'] = { $lte: informazioni['durataMax'] };
         }
-        if(informazioni['giocatoriMin']){
-          mongo_query['informazioni.giocatoriMax'] = {$gte: informazioni['giocatoriMin']};
+        if (informazioni['giocatoriMin']) {
+          mongo_query['informazioni.giocatoriMax'] = { $gte: informazioni['giocatoriMin'] };
         }
-        if(informazioni['giocatoriMax']){
-          mongo_query['informazioni.giocatoriMin'] = {$lte: informazioni['giocatoriMax']};
+        if (informazioni['giocatoriMax']) {
+          mongo_query['informazioni.giocatoriMin'] = { $lte: informazioni['giocatoriMax'] };
         }
-        if(informazioni['giocatoriPerSquadra']){
+        if (informazioni['giocatoriPerSquadra']) {
           mongo_query['informazioni.giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
         }
-        if(informazioni['numeroSquadre']){
+        if (informazioni['numeroSquadre']) {
           mongo_query['informazioni.numeroSquadre'] = informazioni['numeroSquadre'];
         }
       }
@@ -382,7 +375,7 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       if (numeroSegnalazioniMax) {
         mongo_query['numeroSegnalazioni'] = { $lte: numeroSegnalazioniMax };
       }
-      
+
       // TODO: etichette
       /*if(informazioni['etichette']){
         query['etichette'] = {$all: informazioni['etichette']};
@@ -440,15 +433,104 @@ exports.modificaAttivita = function (req, body, id) {
           }));
         }
 
+        var isProposta = false;
+        await attivita.informazioni?.etichette?.forEach(etichetta => {
+          isProposta = isProposta || (etichetta.nome == 'proposta')
+        });
+
         // Se non è amministratore e non è l'autore, restituisci 403
-        if (io.ruolo != "amministratore" && !attivita.autore.equals(io._id)) {
+        if (io.ruolo != "amministratore" && (!attivita.autore.equals(io._id) || !isProposta)) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
             "codice": 403
           }));
         }
 
-        // TODO: Aggiungi controlli e etichetta proposta
+
+
+
+        // controlli correttezza nuove info
+        try {
+          if (!body.informazioni) throw 'informazioni';
+          if (!body.banner) throw 'banner';
+          if (!body.informazioni.titolo) throw 'titolo';
+          if (!body.informazioni.descrizione) throw 'descrizione';
+          if (!body.informazioni.etàMin || !body.informazioni.etàMax) throw 'età';
+          if (!body.informazioni.durataMin || !body.informazioni.durataMax) throw 'durata';
+          if (!body.informazioni.giocatoriMin || !body.informazioni.giocatoriMax) throw 'giocatori';
+        } catch (err) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": ("Informazioni mancanti: " + err)
+          }));
+        }
+
+        if ((body.informazioni.etàMin > body.informazioni.etàMax) || (body.informazioni.durataMin > body.informazioni.durataMax) || (body.informazioni.giocatoriMin > body.informazioni.giocatoriMax)) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": "Intervalli non validi"
+          }));
+        }
+
+
+
+
+        //controlli e etichetta proposta
+
+        var isProposta = false;
+        var etichette = [];
+        var etichetteString = body.informazioni?.etichette || [];
+        await Promise.all(etichetteString.map(async function (nomeEtichetta) {
+          if (nomeEtichetta == "proposta")
+            isProposta = true;
+          var etichetta = await Etichetta.findOne({ nome: nomeEtichetta });
+          if (!etichetta) {
+            return reject(utils.respondWithCode(400, {
+              "messaggio": "Informazioni non valide",
+              "codice": 400,
+              "errore": ("Etichetta inesistente: " + nomeEtichetta)
+            }));
+          }
+          etichette.push(etichetta);
+        }));
+        if (!isProposta && !io.ruolo != 'amministratore') {
+          var proposta = await Etichetta.findOne(
+            { nome: "proposta" }
+          ).exec();
+          if (!proposta) {
+            proposta = new Etichetta({
+              nome: 'proposta',
+              descrizione: 'Questa attività è una proposta di un utente',
+              categoria: 'sistema'
+            });
+          }
+          etichette.push(proposta);
+        }
+        body.informazioni.etichette = etichette;
+
+
+
+        // cercare se è presente un'altra attività con lo stesso titolo
+        var titolo = body.informazioni.titolo;
+        var mongo_query = {};
+        mongo_query['informazioni'] = {};
+        mongo_query = { 'informazioni.titolo': titolo,  _id: {$ne: id}};
+        var cloni = await Attivita.find(mongo_query).exec();
+        //console.log("here");
+        //console.log(cloni);
+        if (cloni?.length) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Titolo non valido",
+            "codice": 400,
+            "errore": "Esiste già un'attività con questo titolo"
+          }));
+        }
+
+
+
+
 
         // Modifica l'attività
         attivita = await Attivita.findByIdAndUpdate(id, {
