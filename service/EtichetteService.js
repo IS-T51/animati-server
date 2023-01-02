@@ -34,12 +34,14 @@ exports.aggiungiEtichetta = function(req, body) {                     // i 400 d
         if(etichetta) {
           return resolve({
             "messaggio" : "Etichetta aggiornata",
-            "codice" : 200
+            "codice" : 200,
+            "etichetta": etichetta
           });
         } else {
           return resolve(utils.respondWithCode(201, {
             "messaggio" : "Etichetta aggiunta",
-            "codice" : 201
+            "codice" : 201,
+            "etichetta": etichetta
           }));
         }
       } catch (err) {

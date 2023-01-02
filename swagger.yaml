@@ -858,6 +858,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Lista'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
