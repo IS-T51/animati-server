@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Utente = require('../models/Utente');
 const Lista = require('../models/Lista');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const utils = require('../utils/writer.js');
 const { OAuth2Client } = require('google-auth-library');
 const { google } = require('googleapis');
