@@ -973,6 +973,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
@@ -1026,6 +1032,8 @@ paths:
         schema:
           type: integer
           format: int64
+          minimum: 0
+          maximum: 9999
       responses:
         "200":
           description: Attività rimossa dalla lista
