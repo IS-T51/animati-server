@@ -1,6 +1,6 @@
 'use strict';
 
-const UtenteService = require('../service/UtenteService');
+const UtenteService = require('./UtenteService');
 const Lista = require('../models/Lista');
 const utils = require('../utils/writer.js');
 

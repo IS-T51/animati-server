@@ -4,10 +4,10 @@ dotenv.config();
 
 mongoose.set('strictQuery', true)
 
-function connect() {
+function connect(test) {
     return new Promise(async (resolve, reject) => {
         // Indirizzo del cluster di MongoDB Atlas
-        const mongoAtlasUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`
+        const mongoAtlasUri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${(test ? 'testing' : process.env.MONGODB_DATABASE)}?retryWrites=true&w=majority`
 
         // Provo a connettermi al cluster di MongoDB Atlas
         await mongoose.connect(

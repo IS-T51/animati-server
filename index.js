@@ -10,12 +10,12 @@ var serverPort = 8080;
 // swaggerRouter configuration
 var options = {
     routing: {
-        controllers: path.join(__dirname, './controllers')
+        controllers: path.join(__dirname, 'src/controllers')
     },
     cors: cors()
 };
 
-var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
+var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'src/api/openapi.yaml'), options);
 var app = expressAppConfig.getApp();
 
 // Initialize the Swagger middleware
@@ -24,7 +24,7 @@ http.createServer(app).listen(serverPort, function () {
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
 });
 
-const database = require('./utils/database');
+const database = require('./src/utils/database');
 database.connect()
 .then(() => {
     database.createCollections();
