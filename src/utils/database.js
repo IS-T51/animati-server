@@ -14,29 +14,32 @@ function connect(test) {
             mongoAtlasUri,
             { useNewUrlParser: true, useUnifiedTopology: true }
         ).then(
-            () => console.log("Mongoose is connected\n"),
-            err => { console.log("Could not connect:\n\t" + err); }
-        );
+            () => console.log("Mongoose is connected\n")
+        ).catch(err => console.log("Could not connect:\n\t" + err));
 
         const dbConnection = mongoose.connection;
         dbConnection.on("error", (err) => console.log(`Connection error: ${err}`));
+        dbConnection.on("disconnected", () => console.log(`Disconnected from db`));
 
+        resolve();
         //Note that Mongoose does not necessarily emit an 'error' event if it loses connectivity to MongoDB. You should listen to the disconnected event to report when Mongoose is disconnected from MongoDB.
     });
 }
 
 function disconnect() {
-    mongoose.disconnect();
+    return mongoose.disconnect();
 }
 
 function createCollections() {
     // Crea collezioni
-    require('../models/Utente').createCollection();
-    require('../models/Attivita').createCollection();
-    require('../models/Lista').createCollection();
-    require('../models/Etichetta').createCollection();
-    require('../models/Valutazione').createCollection();
-    require('../models/Segnalazione').createCollection();
+    return Promise.all([
+    require('../models/Utente').createCollection(),
+    require('../models/Attivita').createCollection(),
+    require('../models/Lista').createCollection(),
+    require('../models/Etichetta').createCollection(),
+    require('../models/Valutazione').createCollection(),
+    require('../models/Segnalazione').createCollection(),
+    ]);
 }
 
 module.exports = {

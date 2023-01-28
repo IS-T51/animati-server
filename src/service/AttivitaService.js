@@ -16,7 +16,7 @@ var mongoose = require('mongoose');
  * returns List
  **/
 exports.aggiornaCatalogo = function (data) {
-  // TODO: implement
+
   return new Promise(async function (resolve, reject) {
     try {
 

@@ -8,7 +8,8 @@ var serverPort = 8080;
 
 
 //create server
-http.createServer(app).listen(serverPort, function () {
+const server = http.createServer(app);
+server.listen(serverPort, function () {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
 });
@@ -20,4 +21,4 @@ database.connect()
 });
 
 
-module.exports = app;
+module.exports = server;
