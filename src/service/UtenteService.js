@@ -56,6 +56,18 @@ let getUtente = exports.getUtente = function (req) {
             }
           }));
         }
+
+        // Se il ruolo dell'utente ha subito modifiche
+        if (utente.ruolo != decoded.ruolo) {
+          return reject(utils.respondWithCode(401, {
+            "messaggio": "Autenticazione non riuscita",
+            "codice": 401,
+            "errore": {
+              "message": "Il tuo ruolo ha subito delle modifiche, logout necessario"
+            }
+          }));
+        }
+
         // Se l'utente esiste
         resolve(utente);
       });
@@ -153,16 +165,18 @@ exports.modificaRuolo = function (req, ruolo, id) {
             "codice": 200
           })
         } else { // Demozione
-          // Cerca se sono il promotore di utente ricorsivamente
+          // Cerca se sono il promotore di utente
+
+          /* versione ricorsiva: albero di promozioni, posso declassare utente se sono un suo antenato nell'albero
           var utenteTemp = utente;
           while (utenteTemp.promossoDa && // Se non è null
             !utenteTemp.promossoDa.equals(utenteTemp._id) && // Se non è uguale a sé stesso
             !utenteTemp.promossoDa.equals(io._id)) { // Se non sono io
             utenteTemp = await Utente.findById(utenteTemp.promossoDa).exec();
-          }
+          }*/
 
           // Se non sono il promotore di utente, restituisci 403
-          if (!utenteTemp.promossoDa.equals(io._id)) {
+          if (!utente.promossoDa.equals(io._id)) {            // usare utenteTemp nell'if invece di utente per la versione ricorsiva
             return reject(utils.respondWithCode(403, {
               "messaggio": "Non sei autorizzato a fare questa richiesta",
               "codice": 403,
@@ -275,7 +289,7 @@ exports.loginGoogle = function (code) {
         utente = await Utente.findOneAndUpdate(
           { email: email },
           { email: email, immagine: immagine },
-          { upsert: true, new: true}
+          { upsert: true, new: true }
         ).exec();
 
         // Creo lista preferiti
