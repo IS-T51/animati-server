@@ -245,24 +245,35 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       let page = pagina || 0;
 
       if (informazioni) {
+        if ((informazioni['etàMin'] > informazioni['etàMax']) || (informazioni['durataMin'] > informazioni['durataMax']) || (informazioni['giocatoriMin'] > informazioni['giocatoriMax'])) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": "Intervalli non validi"
+          }));
+        }
+
         if (informazioni['titolo']) {
           mongo_query['informazioni.titolo'] = { $regex: informazioni['titolo'], $options: 'i' };
         }
         if (informazioni['descrizione']) {
           mongo_query['informazioni.descrizione'] = { $regex: informazioni['descrizione'], $options: 'i' };
         }
+        //il range di età dei partecipanti dev'essere compreso nel range di età per cui è consigliata l'attività (?)
         if (informazioni['etàMin']) {
-          mongo_query['informazioni.etàMax'] = { $gte: informazioni['etàMin'] };
+          mongo_query['informazioni.etàMin'] = { $lte: informazioni['etàMin'] };
         }
         if (informazioni['etàMax']) {
-          mongo_query['informazioni.etàMin'] = { $lte: informazioni['etàMax'] };
+          mongo_query['informazioni.etàMax'] = { $gte: informazioni['etàMax'] };
         }
+        //il range di durata dell'attività deve almeno intersecare il range di tempo a disposizione (?)
         if (informazioni['durataMin']) {
           mongo_query['informazioni.durataMax'] = { $gte: informazioni['durataMin'] };
         }
         if (informazioni['durataMax']) {
           mongo_query['informazioni.durataMin'] = { $lte: informazioni['durataMax'] };
         }
+        //il range di giocatori per cui l'attività è consigliata deve almeno intersecare il range di partecipanti (?)
         if (informazioni['giocatoriMin']) {
           mongo_query['informazioni.giocatoriMax'] = { $gte: informazioni['giocatoriMin'] };
         }
@@ -275,14 +286,63 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         if (informazioni['numeroSquadre']) {
           mongo_query['informazioni.numeroSquadre'] = informazioni['numeroSquadre'];
         }
+
+
+        //etichette
+        if (informazioni['etichette']) {
+
+          var etichette = [];
+          var etichetteString = informazioni['etichette'];
+          await Promise.all(etichetteString.map(async function (nomeEtichetta) {
+            var etichetta = await Etichetta.findOne({ nome: nomeEtichetta });
+            if (!etichetta) {
+              return reject(utils.respondWithCode(400, {
+                "messaggio": "Informazioni non valide",
+                "codice": 400,
+                "errore": ("Etichetta inesistente: " + nomeEtichetta)
+              }));
+            }
+            etichette.push(etichetta);
+          }));
+
+          informazioni['etichette'] = etichette.map(e => {
+            return { $elemMatch: e }
+          });
+          mongo_query['informazioni.etichette'] = { $all: informazioni['etichette'] };
+
+        }
+
       }
+
+      if ((ultimaModificaMin > ultimaModificaMax) || (mediaValutazioniMin > mediaValutazioniMax) || (numeroSegnalazioniMin > numeroSegnalazioniMax)) {
+        return reject(utils.respondWithCode(400, {
+          "messaggio": "Informazioni non valide",
+          "codice": 400,
+          "errore": "Intervalli non validi"
+        }));
+      }
+
       if (autore) {
         mongo_query['autore'] = new mongoose.Types.ObjectId(autore);
       }
       if (ultimaModificaMin) {
+        if (new Date(ultimaModificaMin) > new Date()) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Data invalida",
+            "codice": 400
+          }));
+        }
+
         mongo_query['ultimaModifica'] = { $gte: ultimaModificaMin };
       }
       if (ultimaModificaMax) {
+        /*if (new Date(ultimaModificaMax) > new Date()) {
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Data invalida",
+            "codice": 400
+          }));
+        }*/
+
         mongo_query['ultimaModifica'] = { $lte: ultimaModificaMax };
       }
       if (mediaValutazioniMin) {
@@ -298,13 +358,8 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         mongo_query['numeroSegnalazioni'] = { $lte: numeroSegnalazioniMax };
       }
 
-      // TODO: etichette
-      /*if(informazioni['etichette']){
-        query['etichette'] = {$all: informazioni['etichette']};
-      }*/
 
-
-      // Trova tutte le etichette
+      // Trova tutte le attività
       var catalogo = await Attivita.find(mongo_query)
         .limit(limit)
         .skip(limit * page)
@@ -314,16 +369,17 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       if (catalogo?.length) {
         resolve(catalogo);
       } else {
-        resolve(utils.respondWithCode(204, {
+        resolve(utils.respondWithCode(204, {            // body circa inutile perché molti browser lo scartano
           "messaggio": "Nessuna attività trovata",
           "codice": 204
         }));
       }
     } catch (err) {
+      console.log(err);
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
         "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     }
   });
@@ -343,26 +399,26 @@ exports.modificaAttivita = function (req, body, id) {
     // Verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
 
-        // Verifico che l'utente sia autorizzato a modificare l'attività
-        permessoModifica(io, id).then(async (attivita) => {
+      // Verifico che l'utente sia autorizzato a modificare l'attività
+      permessoModifica(io, id).then(async (attivita) => {
 
-          // Verifico che le informazioni fornite siano valide
-          verificaCorrettezzaAttivita(io, body, id).then(async () => {
+        // Verifico che le informazioni fornite siano valide
+        verificaCorrettezzaAttivita(io, body, id).then(async () => {
 
-            // Modifica l'attività
-            attivita = await Attivita.findByIdAndUpdate(id, {
-              informazioni: body.informazioni,
-              banner: body.banner,
-              collegamenti: body.collegamenti,
-              ultimaModifica: new Date(),
-            }, { new: true }).exec();
+          // Modifica l'attività
+          attivita = await Attivita.findByIdAndUpdate(id, {
+            informazioni: body.informazioni,
+            banner: body.banner,
+            collegamenti: body.collegamenti,
+            ultimaModifica: new Date(),
+          }, { new: true }).exec();
 
-            // Restituisci 200 e l'attività aggiornata
-            resolve(attivita);
-          }
-          ).catch(reject);
+          // Restituisci 200 e l'attività aggiornata
+          resolve(attivita);
         }
         ).catch(reject);
+      }
+      ).catch(reject);
 
     }).catch(function (response) {
       // Errore autenticazione
@@ -473,6 +529,7 @@ exports.ottieniValutazione = function (req, id) {
 }
 
 
+
 function permessoModifica(io, id) {
   return new Promise(async function (resolve, reject) {
     // Ottieni l'attività
@@ -502,7 +559,6 @@ function permessoModifica(io, id) {
     resolve(attivita);
   })
 }
-
 
 
 
@@ -580,7 +636,7 @@ function verificaCorrettezzaAttivita(io, body, id) {
       else
         mongo_query = { 'informazioni.titolo': titolo };
       var cloni = await Attivita.find(mongo_query).exec();
-      //console.log("here");
+
       //console.log(cloni);
       if (cloni?.length) {
         return reject(utils.respondWithCode(400, {

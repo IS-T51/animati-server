@@ -57,6 +57,7 @@ var writeJson = exports.writeJson = function (response, arg1, arg2) {
     }
     payload = JSON.stringify(payload, null, 2);
   } finally {
+    //console.log(code, payload);
     response.writeHead(code, { 'Content-Type': 'application/json' });
     response.end(payload);
   }

@@ -7,7 +7,7 @@ info:
   license:
     name: GPL-3.0 license
     url: https://github.com/IS-T51/animati/blob/main/LICENSE
-  version: 0.3.1
+  version: 0.3.2
 servers:
 - url: https://api.animati.app/
 - url: http://localhost:8080/
@@ -647,7 +647,7 @@ paths:
         style: form
         explode: true
         schema:
-          minimum: 0
+          minimum: 1
           type: integer
           format: int64
       responses:
@@ -1282,7 +1282,7 @@ components:
           etàMin: 1
           durataMin: 1
           titolo: titolo
-          durataMax: 0
+          durataMax: 1
           giocatoriPerSquadra: 1
           numeroSquadre: 1
           giocatoriMax: 1
@@ -1339,6 +1339,7 @@ components:
           format: int64
         etichette:
           type: array
+          maxItems: 64
           items:
             pattern: "[^,]{1,20}"
             type: string
