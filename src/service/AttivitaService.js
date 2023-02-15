@@ -283,10 +283,10 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         }
         //il range di partecipanti dev'essere compreso nel range di partecipanti per cui è consigliata l'attività
         if (informazioni['giocatoriMin']) {
-          mongo_query['informazioni.giocatoriMin'] = { $gte: informazioni['giocatoriMin'] };
+          mongo_query['informazioni.giocatoriMin'] = { $lte: informazioni['giocatoriMin'] };
         }
         if (informazioni['giocatoriMax']) {
-          mongo_query['informazioni.giocatoriMax'] = { $lte: informazioni['giocatoriMax'] };
+          mongo_query['informazioni.giocatoriMax'] = { $gte: informazioni['giocatoriMax'] };
         }
         if (informazioni['giocatoriPerSquadra']) {
           mongo_query['informazioni.giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
