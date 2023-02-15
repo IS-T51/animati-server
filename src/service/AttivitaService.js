@@ -245,6 +245,14 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       let page = pagina || 0;
 
       if (informazioni) {
+        if(informazioni['descrizione']?.length > 50){
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Informazioni non valide",
+            "codice": 400,
+            "errore": "L'espressione da cercare nella descrizione può avere massimo 50 caratteri"
+          }));
+        }
+
         if ((informazioni['etàMin'] > informazioni['etàMax']) || (informazioni['durataMin'] > informazioni['durataMax']) || (informazioni['giocatoriMin'] > informazioni['giocatoriMax'])) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
@@ -259,26 +267,26 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         if (informazioni['descrizione']) {
           mongo_query['informazioni.descrizione'] = { $regex: informazioni['descrizione'], $options: 'i' };
         }
-        //il range di età dei partecipanti dev'essere compreso nel range di età per cui è consigliata l'attività (?)
+        //il range di età dei partecipanti dev'essere compreso nel range di età per cui è consigliata l'attività
         if (informazioni['etàMin']) {
           mongo_query['informazioni.etàMin'] = { $lte: informazioni['etàMin'] };
         }
         if (informazioni['etàMax']) {
           mongo_query['informazioni.etàMax'] = { $gte: informazioni['etàMax'] };
         }
-        //il range di durata dell'attività deve almeno intersecare il range di tempo a disposizione (?)
+        //il range di durata dell'attività deve almeno intersecare il range di tempo a disposizione
         if (informazioni['durataMin']) {
           mongo_query['informazioni.durataMax'] = { $gte: informazioni['durataMin'] };
         }
         if (informazioni['durataMax']) {
           mongo_query['informazioni.durataMin'] = { $lte: informazioni['durataMax'] };
         }
-        //il range di giocatori per cui l'attività è consigliata deve almeno intersecare il range di partecipanti (?)
+        //il range di partecipanti dev'essere compreso nel range di partecipanti per cui è consigliata l'attività
         if (informazioni['giocatoriMin']) {
-          mongo_query['informazioni.giocatoriMax'] = { $gte: informazioni['giocatoriMin'] };
+          mongo_query['informazioni.giocatoriMin'] = { $gte: informazioni['giocatoriMin'] };
         }
         if (informazioni['giocatoriMax']) {
-          mongo_query['informazioni.giocatoriMin'] = { $lte: informazioni['giocatoriMax'] };
+          mongo_query['informazioni.giocatoriMax'] = { $lte: informazioni['giocatoriMax'] };
         }
         if (informazioni['giocatoriPerSquadra']) {
           mongo_query['informazioni.giocatoriPerSquadra'] = informazioni['giocatoriPerSquadra'];
@@ -336,12 +344,7 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         mongo_query['ultimaModifica'] = { $gte: ultimaModificaMin };
       }
       if (ultimaModificaMax) {
-        /*if (new Date(ultimaModificaMax) > new Date()) {
-          return reject(utils.respondWithCode(400, {
-            "messaggio": "Data invalida",
-            "codice": 400
-          }));
-        }*/
+        // va bene anche se è futura
 
         mongo_query['ultimaModifica'] = { $lte: ultimaModificaMax };
       }
