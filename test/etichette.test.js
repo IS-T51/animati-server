@@ -1,5 +1,7 @@
 'use strict';
 
+
+const Etichetta = require('../src/models/Etichetta');
 const request = require('supertest');
 //const jwt = require('jsonwebtoken');
 //const { OAuth2Client } = require('google-auth-library');
@@ -23,7 +25,7 @@ beforeAll(() => {
     });
 
     //connect to database
-    return database.connect('test')
+    return database.connect('test') // se voglio mettere altre robe metto await
         .then(async () => {
             await database.createCollections();
         });
@@ -38,17 +40,13 @@ afterAll(async () => {
 })
 
 
-describe('GET /ping', () => {
-
-    //unico caso: se il server è attivo ping deve avere successo
-    test('Default', async () => {
+describe('GET /etichette', () => {    
+    test('nessuna etichetta', async () => {
         const output = {
-            "messaggio": "PONG",
-            "codice": 200
-        };
-
-        const response = await request(app).get('/ping');
-        expect(response.status).toEqual(200);
-        expect(JSON.parse(response.text)).toEqual(expect.objectContaining(output));
-    })
+            "messaggio": "essuna etichetta trovata"
+        }
+        const response = await request(app).get('/etichette');
+    
+        expect(response.status).toEqual(204);
+    });
 })
