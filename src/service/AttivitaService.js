@@ -98,7 +98,7 @@ exports.aggiungiAttivita = function (req, body) {
  **/
 exports.aggiungiSegnalazione = function (req, body, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // Verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Verifica che l'attività esista
@@ -109,25 +109,19 @@ exports.aggiungiSegnalazione = function (req, body, id) {
             "codice": 404
           }));
         }
-        // Ottieni la segnalazione
+        // Costruisci la segnalazione
         var segnalazione = new Segnalazione(
           { autore: io._id, attività: attivita._id, titolo: body.titolo, messaggio: body.messaggio }
         )
         // Salva la segnalazione
         await segnalazione.save();
 
-        // Se ce ne sono, restituisci 200, altrimenti 201
-        if (segnalazione) {
-          return resolve({
-            "messaggio": "Segnalazione aggiornata",
-            "codice": 200
-          });
-        } else {
-          resolve(utils.respondWithCode(201, {
-            "messaggio": "Segnalazione aggiunta",
-            "codice": 201
-          }));
-        }
+        // Restituisci 201
+        resolve(utils.respondWithCode(201, {
+          "messaggio": "Segnalazione aggiunta",
+          "codice": 201
+        }));
+
       } catch (err) {
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
@@ -153,7 +147,7 @@ exports.aggiungiSegnalazione = function (req, body, id) {
  **/
 exports.aggiungiValutazione = function (req, body, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // Verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Verifica che l'attività esista
@@ -168,25 +162,27 @@ exports.aggiungiValutazione = function (req, body, id) {
         var valutazione = await Valutazione.findOneAndUpdate(
           { autore: io._id, attività: attivita._id },
           { autore: io._id, attività: attivita._id, voto: body.voto },
-          { upsert: true, new: false, runValidators: true }).exec();
+          { upsert: true, new: true, runValidators: true, rawResult: true }).exec();
 
-        // Se ce ne sono, restituisci 200, altrimenti 201
-        if (valutazione) {
+        // Se c'era già restituisci 200, altrimenti 201
+        if (valutazione.lastErrorObject.updatedExisting) {
           return resolve({
             "messaggio": "Valutazione aggiornata",
-            "codice": 200
+            "codice": 200,
+            "valutazione": valutazione.value
           });
         } else {
           resolve(utils.respondWithCode(201, {
             "messaggio": "Valutazione aggiunta",
-            "codice": 201
+            "codice": 201,
+            "valutazione": valutazione.value
           }));
         }
       } catch (err) {
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
           "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -207,7 +203,7 @@ exports.aggiungiValutazione = function (req, body, id) {
 exports.getAttivita = function (id) {
   return new Promise(async function (resolve, reject) {
     try {
-      // Trova tutte le etichette
+      // Cerca l'attività
       var attivita = await Attivita.findById(id).exec();
 
       // Se non esiste, restituisci 404
@@ -223,7 +219,7 @@ exports.getAttivita = function (id) {
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
         "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     }
   });
@@ -245,7 +241,7 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       let page = pagina || 0;
 
       if (informazioni) {
-        if(informazioni['descrizione']?.length > 50){
+        if (informazioni['descrizione']?.length > 50) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
             "codice": 400,
@@ -440,7 +436,7 @@ exports.modificaAttivita = function (req, body, id) {
  **/
 exports.ottieniSegnalazioni = function (req, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // Verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       // Se non è amministratore, restituisci 403
       if (io.ruolo != "amministratore") {
@@ -462,8 +458,8 @@ exports.ottieniSegnalazioni = function (req, id) {
 
         // Ottieni le segnalazioni
         var segnalazioni = await Segnalazione.find({ attività: id }).exec();
-        // Se ce ne sono, restituisci 200, altrimenti 204
-        if (segnalazioni.length > 0) {
+        // Se ce ne sono restituisci 200, altrimenti 204
+        if (segnalazioni?.length > 0) {
           return resolve(segnalazioni);
         } else {
           resolve(utils.respondWithCode(204, {
@@ -475,7 +471,7 @@ exports.ottieniSegnalazioni = function (req, id) {
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
           "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -495,7 +491,7 @@ exports.ottieniSegnalazioni = function (req, id) {
  **/
 exports.ottieniValutazione = function (req, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // Verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Verifica che l'attività esista
@@ -508,7 +504,7 @@ exports.ottieniValutazione = function (req, id) {
         }
         // Ottieni la valutazione
         var valutazione = await Valutazione.findOne({ autore: io._id, attività: id }).exec();
-        // Se ce ne sono, restituisci 200, altrimenti 204
+        // Se ce ne sono restituisci 200, altrimenti 204
         if (valutazione) {
           return resolve(valutazione);
         } else {
@@ -521,7 +517,7 @@ exports.ottieniValutazione = function (req, id) {
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
           "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {

@@ -14,7 +14,7 @@ const utils = require('../utils/writer.js');
  **/
 exports.aggiungiAttivitaALista = function (req, attivita, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Ottieni la lista
@@ -82,7 +82,7 @@ exports.aggiungiAttivitaALista = function (req, attivita, id) {
  **/
 exports.aggiungiLista = function (req, body) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // conta le liste dell'utente, se sono già 99 restituisci 400
@@ -151,7 +151,7 @@ exports.aggiungiLista = function (req, body) {
  **/
 exports.eliminaLista = function (req, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Ottieni la lista
@@ -218,7 +218,7 @@ exports.eliminaLista = function (req, id) {
  **/
 exports.getLista = function (req, id) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Ottieni la lista
@@ -267,7 +267,7 @@ exports.getLista = function (req, id) {
  **/
 exports.getListe = function (req) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Ottieni la lista
@@ -300,7 +300,7 @@ exports.getListe = function (req) {
  **/
 exports.rimuoviAttivitaDaLista = function (req, id, indice) {
   return new Promise(async function (resolve, reject) {
-    // Verifico che autenticato
+    // verifico che l'utente sia autenticato
     UtenteService.getUtente(req).then(async function (io) {
       try {
         // Ottieni la lista

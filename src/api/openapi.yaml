@@ -238,6 +238,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Attivita'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "404":
           description: L'attività non esiste
           content:
@@ -344,6 +350,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
@@ -461,6 +473,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Risposta'
+        "400":
+          description: Richiesta non valida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
@@ -523,7 +541,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Errore'
         "401":
           description: Autenticazione necessaria per fare questa richiesta
           content:
