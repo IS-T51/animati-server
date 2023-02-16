@@ -2,8 +2,8 @@
 
 
 const Etichetta = require('../src/models/Etichetta');
-const Utente = require('../src/models/Utente')
-const jwt = require('jsonwebtoken');
+const Utente = require('../src/models/Utente');
+const UtenteService = require('../src/service/UtenteService');
 const request = require('supertest');
 //const jwt = require('jsonwebtoken');
 //const { OAuth2Client } = require('google-auth-library');
@@ -18,21 +18,7 @@ const EtichettaSchema = require('../src/schema/Etichetta');
 const serverPort = 8080;
 let server;
 
-jest.mock('jsonwebtoken');
-/*
-jest.mock('jsonwebtoken', () => {
-    const originalModule = jest.requireActual('jsonwebtoken');
-  
-    //Mock the default export and named export 'foo'
-    return {
-      __esModule: true,
-      ...originalModule,
-      verify: jest.fn((token, _, f) => {
-        console.log("JESTTTTT")
-        f(undefined, { _id: token, ruolo: "autenticato" })
-      })
-    };
-});*/
+jest.mock('../src/service/UtenteService');
 
 beforeAll(() => {
     //create server
@@ -100,50 +86,58 @@ describe('POST /etichette', () => {
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400"},
             { upsert: true, new: true }
         ).exec();
+
         var etichetta = {
             "descrizione": "descrizione",
             "categoria": "categoria",
             "nome": "nome"
         }
 
-        jwt.verify.mockImplementation((token, _, f) => {
-            f(undefined, {
-                _id: token,
-                ruolo: "autenticato"
+        UtenteService.getUtente.mockImplementation(req => {
+            return new Promise(function (resolve, reject) {
+                resolve({
+                    email: "anonimo1@animati.app",
+                    immagine: "https://picsum.photos/700/400",
+                    ruolo: "autenticato"
+                })
             })
         })
         
 
         const response = await request(app)
             .post('/etichette')
-            .set('Authorization', 'Bearer ' + utente._id)
+            .set('Authorization', 'Bearer token')
             .send(etichetta)
 
         expect(response.status).toEqual(403);
     })
-
+    
     test('aggiungi etichetta', async() => {
         var utente = await Utente.findOneAndUpdate(
             { email: "anonimo1@animati.app" },
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "amministratore" },
             { upsert: true, new: true }
         ).exec();
+
         var etichetta = {
             "descrizione": "descrizione",
             "categoria": "categoria",
             "nome": "nome"
         }
 
-        jwt.verify.mockImplementation((token, _, f) => {
-            f(undefined, {
-                _id: token,
-                ruolo: "amministratore"
+        UtenteService.getUtente.mockImplementation(req => {
+            return new Promise(function (resolve, reject) {
+                resolve({
+                    email: "anonimo1@animati.app",
+                    immagine: "https://picsum.photos/700/400",
+                    ruolo: "amministratore"
+                })
             })
         })
 
         const response = await request(app)
             .post('/etichette')
-            .set('Authorization', 'Bearer ' + utente._id)
+            .set('Authorization', 'Bearer token')
             .send(etichetta)
 
         expect(response.status).toEqual(201);
@@ -160,16 +154,20 @@ describe('POST /etichette', () => {
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "amministratore" },
             { upsert: true, new: true }
         ).exec();
+        
         var etichetta = {
             "descrizione": "descrizione",
             "categoria": "categoria",
             "nome": "nome"
         }
 
-        jwt.verify.mockImplementation((token, _, f) => {
-            f(undefined, {
-                _id: token,
-                ruolo: "amministratore"
+        UtenteService.getUtente.mockImplementation(req => {
+            return new Promise(function (resolve, reject) {
+                resolve({
+                    email: "anonimo1@animati.app",
+                    immagine: "https://picsum.photos/700/400",
+                    ruolo: "amministratore"
+                })
             })
         })
 
@@ -180,4 +178,5 @@ describe('POST /etichette', () => {
 
         expect(response.status).toEqual(200);
     })
+    
 })
