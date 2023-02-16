@@ -53,7 +53,7 @@ beforeEach(async () => {
 describe('GET /etichette', () => {    
     test('nessuna etichetta', async () => {
         const output = {
-            "messaggio": "essuna etichetta trovata"
+            "messaggio": "nessuna etichetta trovata"
         }
         const response = await request(app).get('/etichette');
     
@@ -81,7 +81,7 @@ describe('POST /etichette', () => {
     })
 
     test('non amministratore', async() => {
-        var utente = await Utente.findOneAndUpdate(
+        await Utente.findOneAndUpdate(
             { email: "anonimo1@animati.app" },
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400"},
             { upsert: true, new: true }
@@ -113,7 +113,7 @@ describe('POST /etichette', () => {
     })
     
     test('aggiungi etichetta', async() => {
-        var utente = await Utente.findOneAndUpdate(
+        await Utente.findOneAndUpdate(
             { email: "anonimo1@animati.app" },
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "amministratore" },
             { upsert: true, new: true }
@@ -149,12 +149,13 @@ describe('POST /etichette', () => {
             "categoria": "categoria",
             "nome": "nome"
         })
-        var utente = await Utente.findOneAndUpdate(
+        
+        await Utente.findOneAndUpdate(
             { email: "anonimo1@animati.app" },
             { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "amministratore" },
             { upsert: true, new: true }
         ).exec();
-        
+
         var etichetta = {
             "descrizione": "descrizione",
             "categoria": "categoria",
@@ -173,7 +174,7 @@ describe('POST /etichette', () => {
 
         const response = await request(app)
             .post('/etichette')
-            .set('Authorization', 'Bearer ' + utente._id)
+            .set('Authorization', 'Bearer token')
             .send(etichetta)
 
         expect(response.status).toEqual(200);

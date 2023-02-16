@@ -49,7 +49,7 @@ let getUtente = exports.getUtente = function (req) {
         if (!utente) {
           return reject(utils.respondWithCode(401, {
             "messaggio": "Autenticazione non riuscita",
-            "errore": "Utente non trovato"
+            "errore": "Errore token" // restituiamo un messaggio vago per non rivelare il fatto che il token è corretto ma l'utente non esiste
           }));
         }
 
