@@ -1501,21 +1501,9 @@ components:
         autore: 63b1b59a249a3fa2cf6989e6
     Errore:
       required:
-      - code
       - messaggio
       type: object
       properties:
-        code:
-          type: integer
-          format: int64
-          readOnly: true
-          enum:
-          - 401
-          - 403
-          - 404
-          - 418
-          - 500
-          default: 401
         messaggio:
           maxLength: 128
           minLength: 1
@@ -1529,19 +1517,9 @@ components:
             type: object
     Risposta:
       required:
-      - codice
       - messaggio
       type: object
       properties:
-        codice:
-          type: integer
-          format: int64
-          readOnly: true
-          enum:
-          - 200
-          - 201
-          - 204
-          - 302
         messaggio:
           maxLength: 128
           minLength: 1
@@ -1549,7 +1527,6 @@ components:
           readOnly: true
       example:
         messaggio: ok
-        codice: 200
     Token:
       allOf:
       - $ref: '#/components/schemas/Risposta'

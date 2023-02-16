@@ -22,29 +22,26 @@ exports.aggiungiAttivitaALista = function (req, attivita, id) {
         // Se non esiste, restituisci 404
         if (!lista) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Lista non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Lista inesistente"
           }));
         }
 
         // Se non è l'autore, restituisci 403
+        // volendo si potrebbe nascondere e dare un 404 per non rivelare il fatto che la lista esiste
         if (!lista.autore.equals(io._id)) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Non sei l'autore della lista"
-            }
+            "errore": "Non sei l'autore della lista"
+
           }));
         }
 
         if (lista.attività.length >= 9999) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Richiesta non valida",
-            "codice": 400,
-            "errore": {
-              "message": "Questa lista ha raggiunto la capacità massima, non puoi aggiungere altri elementi"
-            }
+            "errore": "Questa lista ha raggiunto la capacità massima, non puoi aggiungere altri elementi"
+
           }));
         }
 
@@ -55,14 +52,13 @@ exports.aggiungiAttivitaALista = function (req, attivita, id) {
 
         return resolve(utils.respondWithCode(201, {
           "messaggio": "Attività aggiunta",
-          "codice": 201,
           "lista": lista
         }));
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -90,28 +86,22 @@ exports.aggiungiLista = function (req, body) {
           { autore: io._id }
         ).exec();
 
-        if(totale >= 99){
+        if (totale >= 99) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Richiesta non valida",
-            "codice": 400,
-            "errore": {
-              "message": "Hai raggiunto la quantità massima di liste"
-            }
+            "errore": "Hai raggiunto la quantità massima di liste"
           }));
         }
 
         // Controlla se la lista esiste già, e in caso restituisci 400
         var lista = await Lista.findOne(
-          { nome: body.nome, autore: io._id}
+          { nome: body.nome, autore: io._id }
         ).exec();
 
-        if(lista){
+        if (lista) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Richiesta non valida",
-            "codice": 400,
-            "errore": {
-              "message": "Hai già una lista con questo nome"
-            }
+            "errore": "Hai già una lista con questo nome"
           }));
         }
 
@@ -124,14 +114,13 @@ exports.aggiungiLista = function (req, body) {
 
         return resolve(utils.respondWithCode(201, {
           "messaggio": "Lista creata",
-          "codice": 201,
           "lista": lista
         }));
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -160,8 +149,8 @@ exports.eliminaLista = function (req, id) {
         // Se non esiste, restituisci 404
         if (!lista) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Lista non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Lista inesistente"
           }));
         }
 
@@ -169,21 +158,15 @@ exports.eliminaLista = function (req, id) {
         if (!lista.autore.equals(io._id)) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Non sei l'autore della lista"
-            }
+            "errore": "Non sei l'autore della lista"
           }));
         }
 
         //non eliminare preferiti
         if (lista._id.equals(io._id)) {
           return reject(utils.respondWithCode(400, {
-            "messaggio": "Richiesta invalida",
-            "codice": 400,
-            "errore": {
-              "message": "Non si può eliminare la lista preferiti"
-            }
+            "messaggio": "Richiesta non valida",
+            "errore": "Non si può eliminare la lista preferiti"
           }));
         }
 
@@ -191,14 +174,13 @@ exports.eliminaLista = function (req, id) {
         await lista.remove();
 
         return resolve({
-          "messaggio": "Lista eliminata",
-          "codice": 200
+          "messaggio": "Lista eliminata"
         });
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -227,8 +209,8 @@ exports.getLista = function (req, id) {
         // Se non esiste, restituisci 404
         if (!lista) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Lista non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Lista inesistente"
           }));
         }
 
@@ -236,19 +218,16 @@ exports.getLista = function (req, id) {
         if (!lista.autore.equals(io._id)) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Non sei l'autore della lista"
-            }
+            "errore": "Non sei l'autore della lista"
           }));
         }
 
         return resolve(lista);
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -276,10 +255,10 @@ exports.getListe = function (req) {
         return resolve(liste);
 
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -306,13 +285,12 @@ exports.rimuoviAttivitaDaLista = function (req, id, indice) {
         // Ottieni la lista
         var lista = await Lista.findById(id).exec();
 
-        //console.log("here1");
 
         // Se non esiste, restituisci 404
         if (!lista) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Lista non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Lista inesistente"
           }));
         }
 
@@ -320,10 +298,7 @@ exports.rimuoviAttivitaDaLista = function (req, id, indice) {
         if (!lista.autore.equals(io._id)) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Non sei l'autore della lista"
-            }
+            "errore": "Non sei l'autore della lista"
           }));
         }
 
@@ -331,10 +306,7 @@ exports.rimuoviAttivitaDaLista = function (req, id, indice) {
         if (indice >= lista.attività.length) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Richiesta non valida",
-            "codice": 400,
-            "errore": {
-              "message": "L'indice specificato è maggiore della lunghezza della lista"
-            }
+            "errore": "L'indice specificato è maggiore della lunghezza della lista"
           }));
         }
 
@@ -345,10 +317,10 @@ exports.rimuoviAttivitaDaLista = function (req, id, indice) {
 
         return resolve(lista);
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {

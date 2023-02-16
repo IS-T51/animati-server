@@ -43,8 +43,7 @@ describe('GET /ping', () => {
     //unico caso: se il server è attivo ping deve avere successo
     test('Default', async () => {
         const output = {
-            "messaggio": "PONG",
-            "codice": 200
+            "messaggio": "PONG"
         };
 
         const response = await request(app).get('/ping');

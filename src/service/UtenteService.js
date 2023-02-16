@@ -22,8 +22,8 @@ let getUtente = exports.getUtente = function (req) {
     const token = req.headers.authorization.replace(/^Bearer\s/, '');
     if (!token) {
       return reject(utils.respondWithCode(401, {
-        "messaggio": "Autenticazione necessaria per fare questa richiesta",
-        "codice": 401
+        "messaggio": "Autenticazione non riuscita",
+        "errore": "Autenticazione necessaria per fare questa richiesta, token mancante"
       }));
     }
     // Verifico Token
@@ -31,8 +31,7 @@ let getUtente = exports.getUtente = function (req) {
       if (err) {
         return reject(utils.respondWithCode(401, {
           "messaggio": "Autenticazione non riuscita",
-          "codice": 401,
-          "errore": err
+          "errore": ("Errore token: "+err.message)
         }));
       }
 
@@ -40,20 +39,17 @@ let getUtente = exports.getUtente = function (req) {
       Utente.findById(decoded._id, function (err, utente) {
         // Se c'è un errore
         if (err) {
+          console.log(err);
           return reject(utils.respondWithCode(500, {
             "messaggio": "Errore interno",
-            "codice": 500,
-            "errore": err
+            "errore": err.message
           }));
         }
         // Se l'utente non esiste
         if (!utente) {
           return reject(utils.respondWithCode(401, {
             "messaggio": "Autenticazione non riuscita",
-            "codice": 401,
-            "errore": {
-              "message": "Utente non trovato"
-            }
+            "errore": "Utente non trovato"
           }));
         }
 
@@ -61,10 +57,7 @@ let getUtente = exports.getUtente = function (req) {
         if (utente.ruolo != decoded.ruolo) {
           return reject(utils.respondWithCode(401, {
             "messaggio": "Autenticazione non riuscita",
-            "codice": 401,
-            "errore": {
-              "message": "Il tuo ruolo ha subito delle modifiche, logout necessario"
-            }
+            "errore": "Il tuo ruolo ha subito delle modifiche, logout necessario"
           }));
         }
 
@@ -89,8 +82,7 @@ exports.getUtenti = function (req) {
         // Se non è amministratore, restituisci 403
         if (io.ruolo != "amministratore") {
           return reject(utils.respondWithCode(403, {
-            "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403
+            "messaggio": "Non sei autorizzato a fare questa richiesta"
           }));
         }
 
@@ -98,10 +90,10 @@ exports.getUtenti = function (req) {
         var utenti = await Utente.find().exec();
         resolve(utenti);
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -128,20 +120,14 @@ exports.modificaRuolo = function (req, ruolo, id) {
         if (io.ruolo != "amministratore") {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Devi essere amministratore per modificare il ruolo di un utente"
-            }
+            "errore": "Devi essere amministratore per modificare il ruolo di un utente"
           }));
         }
         // Se sto modificando il mio ruolo, restituisci 403 (perché il super-admin si è promosso da solo)
         if (io._id.toString() == id) {
           return reject(utils.respondWithCode(403, {
             "messaggio": "Non sei autorizzato a fare questa richiesta",
-            "codice": 403,
-            "errore": {
-              "message": "Non puoi modificare il tuo ruolo"
-            }
+            "errore": "Non puoi modificare il tuo ruolo"
           }));
         }
 
@@ -151,8 +137,8 @@ exports.modificaRuolo = function (req, ruolo, id) {
         // Se non esiste, restituisci 404
         if (!utente) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Utente non trovato",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Utente inesistente"
           }));
         }
 
@@ -161,8 +147,7 @@ exports.modificaRuolo = function (req, ruolo, id) {
           utente.promossoDa = io._id;
           await utente.save();
           resolve({
-            "messaggio": "Ruolo modificato",
-            "codice": 200
+            "messaggio": "Ruolo modificato"
           })
         } else { // Demozione
           // Cerca se sono il promotore di utente
@@ -179,10 +164,7 @@ exports.modificaRuolo = function (req, ruolo, id) {
           if (!utente.promossoDa.equals(io._id)) {            // usare utenteTemp nell'if invece di utente per la versione ricorsiva
             return reject(utils.respondWithCode(403, {
               "messaggio": "Non sei autorizzato a fare questa richiesta",
-              "codice": 403,
-              "errore": {
-                "message": "Non sei il promotore di questo utente"
-              }
+              "errore": "Non sei il promotore di questo utente"
             }));
           }
 
@@ -199,15 +181,14 @@ exports.modificaRuolo = function (req, ruolo, id) {
           await utente.save();
 
           return resolve({
-            "messaggio": "Ruolo modificato",
-            "codice": 200
+            "messaggio": "Ruolo modificato"
           })
         }
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {
@@ -235,10 +216,10 @@ exports.login = function () {
       });
       resolve(url);
     } catch (err) {
+      console.log(err);
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     }
   });
@@ -277,7 +258,6 @@ exports.loginGoogle = function (code) {
         // Se esiste, restituisci il token
         resolve({
           "messaggio": "Login effettuato",
-          "codice": 200,
           "token": jwt.sign(utente.toObject(),
             process.env.JWT_SECRET_KEY, {
             expiresIn: 86400 // 24 ore
@@ -308,7 +288,6 @@ exports.loginGoogle = function (code) {
 
         resolve({
           "messaggio": "Registrazione effettuata",
-          "codice": 201,
           "token": jwt.sign(utente.toObject(),
             process.env.JWT_SECRET_KEY, {
             expiresIn: 86400 // 24 ore
@@ -321,17 +300,15 @@ exports.loginGoogle = function (code) {
       if (status == 400) {
         console.log(err)
         return reject(utils.respondWithCode(400, {
-          "messaggio": "Codice invalido",
-          "codice": 400,
-          "errore": err
+          "messaggio": "Informazioni non valide",
+          "errore": ("Codice invalido: " + err.message)
         }));
       }
 
       console.log(err)
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     })
 

@@ -22,8 +22,8 @@ exports.aggiornaCatalogo = function (data) {
 
       if (new Date(data) > new Date()) {
         return reject(utils.respondWithCode(400, {
-          "messaggio": "Data invalida",
-          "codice": 400
+          "messaggio": "Richiesta non valida",
+          "errore": "Data invalida"
         }));
       }
 
@@ -36,15 +36,14 @@ exports.aggiornaCatalogo = function (data) {
         return resolve(aggiornati);
       } else {
         return resolve(utils.respondWithCode(204, {
-          "messaggio": "Nessuna attività da aggiornare",
-          "codice": 204
+          "messaggio": "Nessuna attività da aggiornare"
         }));
       }
     } catch (err) {
+      console.log(err);
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     }
   });
@@ -73,7 +72,6 @@ exports.aggiungiAttivita = function (req, body) {
 
         return resolve(utils.respondWithCode(201, {
           "messaggio": "Attività aggiunta",
-          "codice": 201,
           "attività": attivita
         }));
 
@@ -105,8 +103,8 @@ exports.aggiungiSegnalazione = function (req, body, id) {
         var attivita = await Attivita.findById(id).exec();
         if (!attivita) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Attività non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Attività inesistente"
           }));
         }
         // Costruisci la segnalazione
@@ -118,15 +116,13 @@ exports.aggiungiSegnalazione = function (req, body, id) {
 
         // Restituisci 201
         resolve(utils.respondWithCode(201, {
-          "messaggio": "Segnalazione aggiunta",
-          "codice": 201
+          "messaggio": "Segnalazione aggiunta"
         }));
 
       } catch (err) {
-        if(err.code == 11000){
+        if (err.code == 11000) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Richiesta non valida",
-            "codice": 400,
             "errore": "Hai già inviato una segnalazione con questo titolo a questa attività"
           }))
         }
@@ -134,7 +130,6 @@ exports.aggiungiSegnalazione = function (req, body, id) {
         console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
           "errore": err.message
         }));
       }
@@ -163,8 +158,8 @@ exports.aggiungiValutazione = function (req, body, id) {
         var attivita = await Attivita.findById(id).exec();
         if (!attivita) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Attività non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Attività inesistente"
           }));
         }
         // Ottieni la valutazione
@@ -177,20 +172,18 @@ exports.aggiungiValutazione = function (req, body, id) {
         if (valutazione.lastErrorObject.updatedExisting) {
           return resolve({
             "messaggio": "Valutazione aggiornata",
-            "codice": 200,
             "valutazione": valutazione.value
           });
         } else {
           resolve(utils.respondWithCode(201, {
             "messaggio": "Valutazione aggiunta",
-            "codice": 201,
             "valutazione": valutazione.value
           }));
         }
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
           "errore": err.message
         }));
       }
@@ -218,16 +211,16 @@ exports.getAttivita = function (id) {
       // Se non esiste, restituisci 404
       if (!attivita) {
         reject(utils.respondWithCode(404, {
-          "messaggio": "Attivita non trovata",
-          "codice": 404
+          "messaggio": "Risorsa non trovata",
+          "errore": "Attività inesistente"
         }));
       }
 
       resolve(attivita);
     } catch (err) {
+      console.log(err);
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
         "errore": err.message
       }));
     }
@@ -253,7 +246,6 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         if (informazioni['descrizione']?.length > 50) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
-            "codice": 400,
             "errore": "L'espressione da cercare nella descrizione può avere massimo 50 caratteri"
           }));
         }
@@ -261,7 +253,6 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
         if ((informazioni['etàMin'] > informazioni['etàMax']) || (informazioni['durataMin'] > informazioni['durataMax']) || (informazioni['giocatoriMin'] > informazioni['giocatoriMax'])) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
-            "codice": 400,
             "errore": "Intervalli non validi"
           }));
         }
@@ -311,7 +302,6 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
             if (!etichetta) {
               return reject(utils.respondWithCode(400, {
                 "messaggio": "Informazioni non valide",
-                "codice": 400,
                 "errore": ("Etichetta inesistente: " + nomeEtichetta)
               }));
             }
@@ -330,7 +320,6 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       if ((ultimaModificaMin > ultimaModificaMax) || (mediaValutazioniMin > mediaValutazioniMax) || (numeroSegnalazioniMin > numeroSegnalazioniMax)) {
         return reject(utils.respondWithCode(400, {
           "messaggio": "Informazioni non valide",
-          "codice": 400,
           "errore": "Intervalli non validi"
         }));
       }
@@ -341,8 +330,8 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       if (ultimaModificaMin) {
         if (new Date(ultimaModificaMin) > new Date()) {
           return reject(utils.respondWithCode(400, {
-            "messaggio": "Data invalida",
-            "codice": 400
+            "messaggio": "Informazioni non valide",
+            "errore": "Data invalida"
           }));
         }
 
@@ -377,16 +366,14 @@ exports.getCatalogo = function (informazioni, autore, ultimaModificaMin, ultimaM
       if (catalogo?.length) {
         resolve(catalogo);
       } else {
-        resolve(utils.respondWithCode(204, {            // body circa inutile perché molti browser lo scartano
-          "messaggio": "Nessuna attività trovata",
-          "codice": 204
+        resolve(utils.respondWithCode(204, {            // body parzialmente inutile perché molti browser lo scartano
+          "messaggio": "Nessuna attività trovata"
         }));
       }
     } catch (err) {
       console.log(err);
       reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
         "errore": err.message
       }));
     }
@@ -450,8 +437,7 @@ exports.ottieniSegnalazioni = function (req, id) {
       // Se non è amministratore, restituisci 403
       if (io.ruolo != "amministratore") {
         return reject(utils.respondWithCode(403, {
-          "messaggio": "Non sei autorizzato a fare questa richiesta",
-          "codice": 403
+          "messaggio": "Non sei autorizzato a fare questa richiesta"
         }));
       }
 
@@ -460,8 +446,8 @@ exports.ottieniSegnalazioni = function (req, id) {
         var attivita = await Attivita.findById(id).exec();
         if (!attivita) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Attività non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Attività inesistente"
           }));
         }
 
@@ -472,14 +458,13 @@ exports.ottieniSegnalazioni = function (req, id) {
           return resolve(segnalazioni);
         } else {
           resolve(utils.respondWithCode(204, {
-            "messaggio": "Nessuna segnalazione trovata",
-            "codice": 204
+            "messaggio": "Nessuna segnalazione trovata"
           }));
         }
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
           "errore": err.message
         }));
       }
@@ -507,8 +492,8 @@ exports.ottieniValutazione = function (req, id) {
         var attivita = await Attivita.findById(id).exec();
         if (!attivita) {
           return reject(utils.respondWithCode(404, {
-            "messaggio": "Attività non trovata",
-            "codice": 404
+            "messaggio": "Risorsa non trovata",
+            "errore": "Attività inesistente"
           }));
         }
         // Ottieni la valutazione
@@ -518,14 +503,13 @@ exports.ottieniValutazione = function (req, id) {
           return resolve(valutazione);
         } else {
           resolve(utils.respondWithCode(204, {
-            "messaggio": "Nessuna valutazione trovata",
-            "codice": 204
+            "messaggio": "Nessuna valutazione trovata"
           }));
         }
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
-          "codice": 500,
           "errore": err.message
         }));
       }
@@ -546,8 +530,8 @@ function permessoModifica(io, id) {
     // Se non esiste, restituisci 404
     if (!attivita) {
       return reject(utils.respondWithCode(404, {
-        "messaggio": "Attività non trovata",
-        "codice": 404
+        "messaggio": "Risorsa non trovata",
+        "errore": "Attività inesistente"
       }));
     }
 
@@ -559,8 +543,7 @@ function permessoModifica(io, id) {
     // Se non è amministratore e non è l'autore, restituisci 403
     if (io.ruolo != "amministratore" && (!attivita.autore.equals(io._id) || !isProposta)) {
       return reject(utils.respondWithCode(403, {
-        "messaggio": "Non sei autorizzato a fare questa richiesta",
-        "codice": 403
+        "messaggio": "Non sei autorizzato a fare questa richiesta"
       }));
     }
 
@@ -586,7 +569,6 @@ function verificaCorrettezzaAttivita(io, body, id) {
       } catch (err) {
         return reject(utils.respondWithCode(400, {
           "messaggio": "Informazioni non valide",
-          "codice": 400,
           "errore": ("Informazioni mancanti: " + err)
         }));
       }
@@ -594,7 +576,6 @@ function verificaCorrettezzaAttivita(io, body, id) {
       if ((body.informazioni.etàMin > body.informazioni.etàMax) || (body.informazioni.durataMin > body.informazioni.durataMax) || (body.informazioni.giocatoriMin > body.informazioni.giocatoriMax)) {
         return reject(utils.respondWithCode(400, {
           "messaggio": "Informazioni non valide",
-          "codice": 400,
           "errore": "Intervalli non validi"
         }));
       }
@@ -612,7 +593,6 @@ function verificaCorrettezzaAttivita(io, body, id) {
         if (!etichetta) {
           return reject(utils.respondWithCode(400, {
             "messaggio": "Informazioni non valide",
-            "codice": 400,
             "errore": ("Etichetta inesistente: " + nomeEtichetta)
           }));
         }
@@ -648,8 +628,7 @@ function verificaCorrettezzaAttivita(io, body, id) {
       //console.log(cloni);
       if (cloni?.length) {
         return reject(utils.respondWithCode(400, {
-          "messaggio": "Titolo non valido",
-          "codice": 400,
+          "messaggio": "Informazioni non valide",
           "errore": "Esiste già un'attività con questo titolo"
         }));
       }
@@ -660,8 +639,7 @@ function verificaCorrettezzaAttivita(io, body, id) {
       console.log(err);
       return reject(utils.respondWithCode(500, {
         "messaggio": "Errore interno",
-        "codice": 500,
-        "errore": err
+        "errore": err.message
       }));
     }
   })

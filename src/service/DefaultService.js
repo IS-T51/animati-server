@@ -9,8 +9,7 @@
 exports.ping = function() {
   return new Promise(function(resolve, reject) {
     resolve({
-      "messaggio" : "PONG",
-      "codice" : 200
+      "messaggio" : "PONG"
     });
   });
 }

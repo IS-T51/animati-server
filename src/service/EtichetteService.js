@@ -19,8 +19,7 @@ exports.aggiungiEtichetta = function(req, body) {                     // i 400 d
         // Se non è amministratore, restituisci 403
         if(io.ruolo != "amministratore") {
           return reject(utils.respondWithCode(403, {
-            "messaggio" : "Non sei autorizzato a fare questa richiesta",
-            "codice" : 403
+            "messaggio" : "Non sei autorizzato a fare questa richiesta"
           }));
         }
 
@@ -34,21 +33,19 @@ exports.aggiungiEtichetta = function(req, body) {                     // i 400 d
         if(etichetta) {
           return resolve({
             "messaggio" : "Etichetta aggiornata",
-            "codice" : 200,
             "etichetta": etichetta
           });
         } else {
           return resolve(utils.respondWithCode(201, {
             "messaggio" : "Etichetta aggiunta",
-            "codice" : 201,
             "etichetta": etichetta
           }));
         }
       } catch (err) {
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio" : "Errore interno",
-          "codice" : 500,
-          "errore" : err
+          "errore" : err.message
         }));
       }
     }).catch(function(response) {
@@ -75,15 +72,14 @@ exports.ottieniEtichette = function() {
         resolve(etichette);
       } else {
         resolve(utils.respondWithCode(204,{
-          "messaggio" : "Nessuna etichetta trovata",
-          "codice" : 204
+          "messaggio" : "Nessuna etichetta trovata"
         }));
       }
     } catch (err) {
+      console.log(err);
       reject(utils.respondWithCode(500,{
         "messaggio" : "Errore interno",
-        "codice" : 500,
-        "errore" : err
+        "errore" : err.message
       }));
     }
   });
