@@ -19,7 +19,9 @@ function connect(test) {
 
         const dbConnection = mongoose.connection;
         dbConnection.on("error", (err) => console.log(`Connection error: ${err}`));
-        dbConnection.on("disconnected", () => console.log(`Disconnected from db`));
+        if (!test) {
+            dbConnection.on("disconnected", () => console.log(`Disconnected from db`));
+        }
 
         resolve();
         //Note that Mongoose does not necessarily emit an 'error' event if it loses connectivity to MongoDB. You should listen to the disconnected event to report when Mongoose is disconnected from MongoDB.
