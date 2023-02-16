@@ -123,10 +123,19 @@ exports.aggiungiSegnalazione = function (req, body, id) {
         }));
 
       } catch (err) {
+        if(err.code == 11000){
+          return reject(utils.respondWithCode(400, {
+            "messaggio": "Richiesta non valida",
+            "codice": 400,
+            "errore": "Hai già inviato una segnalazione con questo titolo a questa attività"
+          }))
+        }
+
+        console.log(err);
         reject(utils.respondWithCode(500, {
           "messaggio": "Errore interno",
           "codice": 500,
-          "errore": err
+          "errore": err.message
         }));
       }
     }).catch(function (response) {

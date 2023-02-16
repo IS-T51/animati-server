@@ -406,13 +406,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Valutazione'
         "201":
           description: Valutazione aggiunta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Risposta'
+                $ref: '#/components/schemas/Valutazione'
         "400":
           description: Richiesta non valida
           content:
