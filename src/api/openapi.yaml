@@ -993,7 +993,7 @@ paths:
           pattern: "^[a-f\\d]{24}$"
           type: string
       responses:
-        "200":
+        "204":
           description: Lista eliminata
           content:
             application/json:

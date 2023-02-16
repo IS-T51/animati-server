@@ -173,9 +173,9 @@ exports.eliminaLista = function (req, id) {
         // Elimina la lista
         await lista.remove();
 
-        return resolve({
+        return resolve(utils.respondWithCode(204, {
           "messaggio": "Lista eliminata"
-        });
+        }));
       } catch (err) {
         console.log(err);
         reject(utils.respondWithCode(500, {
