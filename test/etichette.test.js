@@ -52,12 +52,10 @@ beforeEach(async () => {
 
 describe('GET /etichette', () => {    
     test('nessuna etichetta', async () => {
-        const output = {
-            "messaggio": "nessuna etichetta trovata"
-        }
-        const response = await request(app).get('/etichette');
-    
-        expect(response.status).toEqual(204);
+
+        const response = await request(app)
+            .get('/etichette')
+            .expect(204)
     });
 
     test('ci sono etichette', async () => {
@@ -66,18 +64,18 @@ describe('GET /etichette', () => {
             "categoria": "categoria",
             "nome": "nome"});
 
-        const response = await request(app).get('/etichette');
-
-        expect(response.status).toEqual(200);
+        const response = await request(app)
+            .get('/etichette')
+            .expect(200)
     })
 })
 
 describe('POST /etichette', () => {
     test('non autenticato', async() => {
 
-        const response = await request(app).post('/etichette')
-
-        expect(response.status).toEqual(401);
+        const response = await request(app)
+            .post('/etichette')
+            .expect(401)
     })
 
     test('non amministratore', async() => {
@@ -108,8 +106,7 @@ describe('POST /etichette', () => {
             .post('/etichette')
             .set('Authorization', 'Bearer token')
             .send(etichetta)
-
-        expect(response.status).toEqual(403);
+            .expect(403)
     })
     
     test('aggiungi etichetta', async() => {
@@ -139,8 +136,7 @@ describe('POST /etichette', () => {
             .post('/etichette')
             .set('Authorization', 'Bearer token')
             .send(etichetta)
-
-        expect(response.status).toEqual(201);
+            .expect(201)
     })
 
     test('aggiungi etichetta', async() => {
@@ -176,8 +172,7 @@ describe('POST /etichette', () => {
             .post('/etichette')
             .set('Authorization', 'Bearer token')
             .send(etichetta)
-
-        expect(response.status).toEqual(200);
+            .expect(200)
     })
     
 })

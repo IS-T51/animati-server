@@ -35,6 +35,7 @@ beforeAll(() => {
 }, 10000)
 
 afterAll(async () => {
+    await Utente.deleteMany();
     return Promise.all([
         database.disconnect(),
         server.close()
@@ -49,15 +50,19 @@ describe('GET /utente/login', () => {
     test('login', async() => {
         const response = await request(app).get('/utente/login');
 
-        expect(response.status).toEqual(302);
+        await request(app)
+            .get('/utente/login')
+            .expect(302)
     })
 })
 
 describe('GET /utente', () => {
-    test('token non valido', async() => {
+    test('autenticazione non riuscita', async() => {
         const response = await request(app).get('/utente');
 
-        expect(response.status).toEqual(401);
+        await request(app)
+            .get('/utente')
+            .expect(401)
     })
 
     test('ruolo modificato', async() => {
@@ -67,12 +72,10 @@ describe('GET /utente', () => {
             { upsert: true, new: true }
         ).exec();
 
-        const token = {
-            "token": jwt.sign(
-                utente.toObject(),
-                process.env.JWT_SECRET_KEY
-            )
-        }
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
 
         await Utente.findOneAndUpdate(
             { email: "anonimo1@animati.app" },
@@ -80,7 +83,205 @@ describe('GET /utente', () => {
             { upsert: true, new: true }
         ).exec();
 
-        const response = await request(app).get('/utente');
-        expect(response.status).toEqual(401); 
+        await request(app)
+            .get('/utente')
+            .set('Authorization', 'Bearer' + token)
+            .expect(401)
+    })
+
+    test('errore token', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "autenticato" },
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            "abc",
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .get('/utente')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(401)
+    })
+
+    test('utente non esiste', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "autenticato" },
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await Utente.deleteMany();
+
+        await request(app)
+            .get('/utente')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(401)
     })
 })
+
+describe('GET /utenti', () => {
+    test('non amministratore', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400" },
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .get('/utenti')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+    })
+
+    test('trova utenti', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400", ruolo: "amministratore" },
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .get('/utenti')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+    })
+})
+
+describe('PATCH /utente/{id}', () => {
+    test('autenticazione non riuscita', async() => {
+        const response = await request(app).patch('/utente/{id}');
+
+        expect(response.status).toEqual(401);
+    })
+
+    test('non amministratore', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400" },
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .patch('/utente/' + utente._id + '?ruolo=amministratore')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+    })
+
+    test('autopromozione', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore"},
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .patch('/utente/' + utente._id + '?ruolo=autenticato')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+    })
+
+    test('utente non trovato', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore"},
+            { upsert: true, new: true }
+        ).exec();
+
+        var utente2 = await Utente.findOneAndUpdate(
+            { email: "anonimo2@animati.app" },
+            { email: "anonimo2@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore"},
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .patch('/utente/' + utente2._id + '?ruolo=autenticato')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+    })
+
+    test('utente promosso ad admin', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore"},
+            { upsert: true, new: true }
+        ).exec();
+
+        var utente2 = await Utente.findOneAndUpdate(
+            { email: "anonimo2@animati.app" },
+            { email: "anonimo2@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "autenticato"},
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .patch('/utente/' + utente2._id + '?ruolo=amministratore')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+    })
+
+    test('utente promosso ad admin', async() => {
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore"},
+            { upsert: true, new: true }
+        ).exec();
+
+        var utente2 = await Utente.findOneAndUpdate(
+            { email: "anonimo2@animati.app" },
+            { email: "anonimo2@animati.app", immagine: "https://picsum.photos/700/400",  ruolo: "amministratore", promossoDa: utente._id},
+            { upsert: true, new: true }
+        ).exec();
+
+        const token = jwt.sign(
+            utente.toObject(),
+            process.env.JWT_SECRET_KEY
+        )
+
+        await request(app)
+            .patch('/utente/' + utente2._id + '?ruolo=autenticato')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+    })
+
+    //test promotore eliminato - TODO
+})
+
+//test loginGoogle - TODO
