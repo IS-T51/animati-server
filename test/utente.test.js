@@ -168,9 +168,15 @@ describe('GET /utenti', () => {
 
 describe('PATCH /utente/{id}', () => {
     test('autenticazione non riuscita', async() => {
-        const response = await request(app).patch('/utente/{id}');
+        var utente = await Utente.findOneAndUpdate(
+            { email: "anonimo1@animati.app" },
+            { email: "anonimo1@animati.app", immagine: "https://picsum.photos/700/400" },
+            { upsert: true, new: true }
+        ).exec();
 
-        expect(response.status).toEqual(401);
+        const response = await request(app)
+            .patch('/utente/' + utente._id)
+            .expect(401)
     })
 
     test('non amministratore', async() => {
