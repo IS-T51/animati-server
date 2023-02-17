@@ -22,7 +22,7 @@
     "js-yaml": "^3.3.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.1",
-    "updated-oas3-tools": "^2.0.3"
+    "oas3-tools-cors": "^2.3.5"
   },
   "devDependencies": {
     "jest": "^29.4.0",

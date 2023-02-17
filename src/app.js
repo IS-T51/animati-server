@@ -2,7 +2,7 @@
 
 const path = require('path');
 const cors = require('cors');
-var oas3Tools = require('updated-oas3-tools');
+var oas3Tools = require('oas3-tools-cors');
 
 
 // swaggerRouter configuration
